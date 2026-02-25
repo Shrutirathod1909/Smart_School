@@ -1,0 +1,314 @@
+import 'package:flutter/material.dart';
+
+class LessonPlanScreen extends StatefulWidget {
+  const LessonPlanScreen({super.key});
+
+  @override
+  State<LessonPlanScreen> createState() => _LessonPlanScreenState();
+}
+
+class _LessonPlanScreenState extends State<LessonPlanScreen> {
+
+  DateTime selectedDate = DateTime.now();
+  DateTime startOfWeek = DateTime(2026, 1, 26); // ✅ ADDED
+
+  //////////////////////////////////////////////////////////
+  /// DATE PICKER
+  //////////////////////////////////////////////////////////
+
+  Future<void> _pickDate() async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  //////////////////////////////////////////////////////////
+  /// WEEK NAVIGATION
+  //////////////////////////////////////////////////////////
+
+  void previousWeek() {
+    setState(() {
+      startOfWeek =
+          startOfWeek.subtract(const Duration(days: 7));
+    });
+  }
+
+  void nextWeek() {
+    setState(() {
+      startOfWeek =
+          startOfWeek.add(const Duration(days: 7));
+    });
+  }
+
+  String format(DateTime date) {
+    return "${date.day.toString().padLeft(2, '0')}/"
+        "${date.month.toString().padLeft(2, '0')}/"
+        "${date.year}";
+  }
+
+  String getDateRange() {
+    DateTime endOfWeek =
+        startOfWeek.add(const Duration(days: 6));
+    return "${format(startOfWeek)} - ${format(endOfWeek)}";
+  }
+
+  //////////////////////////////////////////////////////////
+  /// BUILD
+  //////////////////////////////////////////////////////////
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xfff2f2f2),
+
+      appBar: AppBar(
+        backgroundColor: Colors.grey.shade900,
+        title: const Text(
+          "Lesson Plan",
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme:
+            const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: _pickDate,
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {});
+            },
+          ),
+        ],
+      ),
+
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: ListView(
+          children: [
+
+            //////////////////////////////////////////////////////
+            /// HEADER
+            //////////////////////////////////////////////////////
+
+           Container(
+  padding: const EdgeInsets.all(15),
+  decoration: BoxDecoration(
+    color: Colors.grey.shade200,
+    borderRadius: BorderRadius.circular(15),
+  ),
+  child: Row(
+    children: [
+      /// LEFT TEXT
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              "Your Lessons are here!",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              "Access your lessons and study material",
+              style: TextStyle(color: Colors.black54),
+            ),
+          ],
+        ),
+      ),
+
+      /// RIGHT IMAGE
+      Image.asset(
+        "assets/icons/lesson.webp",
+        height: 70,
+      ),
+    ],
+  ),
+),
+
+const SizedBox(height: 20),
+
+            //////////////////////////////////////////////////////
+            /// DATE RANGE
+            //////////////////////////////////////////////////////
+
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius:
+                    BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                        Icons.arrow_back_ios),
+                    onPressed: previousWeek,
+                  ),
+                  Text(
+                    getDateRange(),
+                    style: const TextStyle(
+                        fontWeight:
+                            FontWeight.bold),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                        Icons.arrow_forward_ios),
+                    onPressed: nextWeek,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            //////////////////////////////////////////////////////
+            /// DAY SECTIONS
+            //////////////////////////////////////////////////////
+
+            buildDaySection(0, "Monday"),
+            const SizedBox(height: 20),
+            buildDaySection(1, "Tuesday"),
+            const SizedBox(height: 20),
+            buildDaySection(2, "Wednesday"),
+            const SizedBox(height: 20),
+            buildDaySection(3, "Thursday"),
+            const SizedBox(height: 20),
+            buildDaySection(4, "Friday"),
+            const SizedBox(height: 20),
+            buildDaySection(5, "Saturday"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  //////////////////////////////////////////////////////////
+  /// DYNAMIC DAY SECTION
+  //////////////////////////////////////////////////////////
+
+  Widget buildDaySection(int index, String dayName) {
+
+    DateTime date =
+        startOfWeek.add(Duration(days: index));
+
+    List<Map<String, String>> lessons = [
+      {
+        "subject": "English (210)",
+        "time": "9:00 AM - 09:45 AM",
+        "syllabus": "Grammar Chapter 1"
+      },
+      {
+        "subject": "Mathematics (110)",
+        "time": "09:45 AM - 10:30 AM",
+        "syllabus": "Practice Session"
+      },
+      {
+        "subject": "Hindi (230)",
+        "time": "10:30 AM - 11:15 AM",
+        "syllabus": "Reading & Writing"
+      },
+      {
+        "subject": "Computer (00220)",
+        "time": "11:15 AM - 12:00 PM",
+        "syllabus": "Practical Lab"
+      },
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius:
+            BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color:
+                Colors.grey.withOpacity(0.2),
+            blurRadius: 5,
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        children: [
+
+          Text(
+            dayName,
+            style: const TextStyle(
+                fontSize: 18,
+                fontWeight:
+                    FontWeight.bold),
+          ),
+          Text(
+            format(date),
+            style: const TextStyle(
+                color: Colors.grey),
+          ),
+
+          const SizedBox(height: 15),
+
+          const Row(
+            children: [
+              Expanded(
+                  child: Text("Subject",
+                      style: TextStyle(
+                          fontWeight:
+                              FontWeight.bold))),
+              Expanded(
+                  child: Text("Time",
+                      style: TextStyle(
+                          fontWeight:
+                              FontWeight.bold))),
+              Expanded(
+                  child: Text("Syllabus",
+                      style: TextStyle(
+                          fontWeight:
+                              FontWeight.bold))),
+            ],
+          ),
+
+          const Divider(),
+
+          ...lessons.map(
+            (lesson) => Padding(
+              padding:
+                  const EdgeInsets.symmetric(
+                      vertical: 6),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: Text(
+                          lesson["subject"]!)),
+                  Expanded(
+                      child:
+                          Text(lesson["time"]!)),
+                  Expanded(
+                      child: Text(
+                          lesson["syllabus"]!)),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
