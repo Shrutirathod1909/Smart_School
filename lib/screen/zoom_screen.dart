@@ -4,6 +4,13 @@ void main() {
   runApp(const MyApp());
 }
 
+/// 🎨 THEME COLORS
+const Color headerBlue = Color(0xFF2196F3); // light blue
+const Color royalBlue = Color(0xFF3F51B5); // royal blue
+const Color joinGreen = Color(0xFF2E7D32);  // join button
+const Color liveBlue = Color(0xFF1E88E5);   // live badge
+const Color lightBg = Color(0xFFF0F4FF);    // background
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -22,94 +29,96 @@ class ZoomLiveClasses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6F8),
+      backgroundColor: lightBg,
+
+      /// 🌊 Gradient AppBar
       appBar: AppBar(
-        backgroundColor: Colors.black,
         elevation: 0,
-        leading: const Icon(Icons.arrow_back, color: Colors.white),
         centerTitle: true,
+         leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context); // Back button functional
+          },
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [headerBlue, royalBlue],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
         title: const Text(
           "Zoom Live Classes",
           style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+              fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20),
         ),
       ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
-
-            // 🔹 Header Section
+            /// Header Section
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 20),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
               decoration: const BoxDecoration(
-                color: Colors.white,
+                gradient: LinearGradient(
+                  colors: [headerBlue, royalBlue],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
               ),
               child: Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-                crossAxisAlignment:
-                    CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Your Zoom Live Classes!",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Your Zoom Live Classes!",
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        "Join your Zoom virtual classes",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
+                        SizedBox(height: 6),
+                        Text(
+                          "Join your virtual classes seamlessly",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w400),
                         ),
-                      ),
-                    ],
-                  ),
-
-                  // 🔹 Circular Zoom Image
-                  Container(
-                    height: 70,
-                    width: 70,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF4A90E2),
-                          Color(0xFF007AFF)
-                        ],
-                      ),
+                      ],
                     ),
-                    child: const Icon(
+                  ),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white24,
+                    child: Icon(
                       Icons.videocam,
                       color: Colors.white,
-                      size: 35,
+                      size: 30,
                     ),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
 
-            // 🔹 Class Card
             buildClassCard(
               title: "Maths Discussion",
               className: "Class 1 A",
               dateTime: "30/01/2026 03:00 AM",
               duration: "45 Minutes",
               host: "Albert Thomas (Teacher: 54545454)",
-              description: "Maths Discussion",
+              description: "Discussion on algebra and geometry.",
             ),
 
             const SizedBox(height: 20),
@@ -120,10 +129,10 @@ class ZoomLiveClasses extends StatelessWidget {
               dateTime: "20/01/2026 12:00 PM",
               duration: "45 Minutes",
               host: "Jason Sharlton (Teacher: 90006)",
-              description: "EVS Extra Classes",
+              description: "Environment and sustainability topics.",
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
           ],
         ),
       ),
@@ -143,78 +152,99 @@ class ZoomLiveClasses extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.shade300,
-              blurRadius: 8,
-              spreadRadius: 2,
-            )
+              color: royalBlue.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(2, 6),
+            ),
           ],
         ),
         child: Column(
           children: [
-
-            // Card Header
+            /// Card Header
             Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 14),
-              decoration: const BoxDecoration(
-                color: Color(0xFFEFEFEF),
-                borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(16)),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [headerBlue, royalBlue],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(18),
+                ),
               ),
               child: Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
                   ),
+
+                  /// Join Button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: joinGreen,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 10),
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      elevation: 3,
                     ),
                     onPressed: () {},
-                    child: const Text("Join"),
+                    child: const Text(
+                      "Join",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
                   )
                 ],
               ),
             ),
 
-            // Card Body
+            /// Card Body
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
                   buildRow("Class:", className),
                   buildRow("Date Time:", dateTime),
-                  buildRow("Class Duration:", duration),
-                  buildRow("Class Host:", host),
+                  buildRow("Duration:", duration),
+                  buildRow("Host:", host),
                   buildRow("Description:", description),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
+
+                  /// Live Badge
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 6),
                       decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.red),
-                        borderRadius:
-                            BorderRadius.circular(10),
+                        color: liveBlue,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: liveBlue.withOpacity(0.4),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: const Text(
                         "Live",
                         style: TextStyle(
-                            color: Colors.red),
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                   )
@@ -231,24 +261,21 @@ class ZoomLiveClasses extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             width: 120,
             child: Text(
               title,
               style: const TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
-              ),
+                  color: Colors.grey, fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
             child: Text(
               value,
               style: const TextStyle(
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500, color: Colors.black87),
             ),
           )
         ],

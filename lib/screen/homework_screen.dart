@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 class HomeworkScreen extends StatefulWidget {
   const HomeworkScreen({super.key});
 
@@ -12,6 +10,15 @@ class HomeworkScreen extends StatefulWidget {
 class _HomeworkScreenState extends State<HomeworkScreen> {
   String selectedStatus = "Submitted";
   String selectedFilter = "All";
+
+  // Colors inspired by the Orbit Science logo
+  final Color orbitRed = const Color(0xFFD32F2F);
+  final Color orbitBlue = const Color(0xFF1976D2);
+  final Color orbitGreen = const Color(0xFF388E3C);
+  final Color orbitOrange = const Color(0xFFFB8C00);
+  final Color orbitPurple = const Color(0xFF7B1FA2);
+  final Color cardBackground = const Color(0xFFF5F5F5);
+  final Color textBlack = Colors.black87;
 
   List<Map<String, dynamic>> homeworkList = [
     {
@@ -36,13 +43,24 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Filter homework list by selectedFilter (simple filter by subject)
+    List<Map<String, dynamic>> filteredHomework = homeworkList.where((hw) {
+      return selectedFilter == "All" || hw['subject'] == selectedFilter;
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Homework",style: TextStyle(color: Colors.white),),
-        backgroundColor: Colors.grey.shade900,
+        title: const Text(
+          "Homework",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: orbitPurple,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {},
+          ),
         ],
       ),
       body: Padding(
@@ -50,14 +68,18 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Your Homework is here!",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: orbitBlue,
+              ),
             ),
             const SizedBox(height: 5),
-            const Text(
+            Text(
               "Track your assignments and submissions",
-              style: TextStyle(color: Colors.black87),
+              style: TextStyle(color: textBlack),
             ),
             const SizedBox(height: 15),
 
@@ -66,17 +88,16 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  statusButton("Pending"),
+                  statusButton("Pending", orbitOrange),
                   const SizedBox(width: 8),
-                  statusButton("Submitted"),
+                  statusButton("Submitted", orbitGreen),
                   const SizedBox(width: 8),
-                  statusButton("Evaluated"),
+                  statusButton("Evaluated", orbitBlue),
                   const SizedBox(width: 15),
                   DropdownButton<String>(
                     value: selectedFilter,
-                    items: <String>['All', 'Math', 'Science', 'Computer'].map((
-                      String value,
-                    ) {
+                    items: <String>['All', 'Mathematics', 'Science', 'Computer']
+                        .map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
@@ -91,28 +112,28 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 15),
 
             // Homework Cards
             Expanded(
               child: ListView.builder(
-                itemCount: homeworkList.length,
+                itemCount: filteredHomework.length,
                 itemBuilder: (context, index) {
-                  final hw = homeworkList[index];
+                  final hw = filteredHomework[index];
                   return Container(
                     margin: const EdgeInsets.only(bottom: 12),
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: cardBackground,
                       borderRadius: BorderRadius.circular(15),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
+                          color: orbitPurple.withOpacity(0.2),
                           blurRadius: 6,
                           offset: const Offset(0, 3),
                         ),
                       ],
+                      border: Border.all(color: orbitPurple.withOpacity(0.3)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,9 +144,10 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
                           children: [
                             Text(
                               "${hw['subject']} (${hw['code']})",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
+                                color: orbitRed,
                               ),
                             ),
                             Container(
@@ -134,7 +156,7 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade800,
+                                color: orbitBlue,
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: const Text(
@@ -147,16 +169,23 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
                         const SizedBox(height: 10),
 
                         // Homework details
-                        Text("Homework Date: ${hw['homeworkDate']}"),
-                        Text("Submission Date: ${hw['submissionDate']}"),
-                        Text("Created By: ${hw['createdBy']}"),
-                        Text("Max Marks: ${hw['maxMarks']}"),
+                        Text("Homework Date: ${hw['homeworkDate']}",
+                            style: TextStyle(color: textBlack)),
+                        Text("Submission Date: ${hw['submissionDate']}",
+                            style: TextStyle(color: textBlack)),
+                        Text("Created By: ${hw['createdBy']}",
+                            style: TextStyle(color: textBlack)),
+                        Text("Max Marks: ${hw['maxMarks']}",
+                            style: TextStyle(color: textBlack)),
                         const SizedBox(height: 10),
 
                         // Submission row
                         const Text(
                           "My Submission:",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                         ),
                         const SizedBox(height: 5),
                         Row(
@@ -166,7 +195,7 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
                               child: Text(
                                 hw['file'],
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: Colors.black87),
+                                style: TextStyle(color: textBlack),
                               ),
                             ),
                             ElevatedButton.icon(
@@ -181,7 +210,7 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey.shade800,
+                                backgroundColor: orbitGreen,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
                                   vertical: 8,
@@ -192,10 +221,10 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        const Text(
+                        Text(
                           "Description: Submit homework before last date.",
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: textBlack,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -211,8 +240,9 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
     );
   }
 
-  Widget statusButton(String status) {
+  Widget statusButton(String status, Color color) {
     bool isSelected = selectedStatus == status;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -222,7 +252,7 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.green : Colors.grey.shade300,
+          color: isSelected ? color : Colors.grey.shade300,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(

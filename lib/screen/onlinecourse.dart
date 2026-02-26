@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// 🎨 ORBIT BRAND COLORS
+/// 🎨 STUDENT-FRIENDLY PURPLE + BLUE COLORS
 class AppColors {
-  static const Color orbitDarkBlue = Color(0xff0D47A1);
-  static const Color orbitBlue = Color(0xff1565C0);
-  static const Color orbitLightBlue = Color(0xff42A5F5);
-  static const Color orbitSky = Color(0xffE3F2FD);
+  static const Color studentPurple = Color(0xFF7B1FA2); // vibrant purple
+  static const Color studentBlue = Color(0xFF1E88E5);   // lively blue
+  static const Color studentLightGrey = Color(0xFFF9F9F9); // light background
 }
 
 void main() {
@@ -30,20 +29,27 @@ class OnlineCourseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.orbitSky, // 🌤 Light Sky Background
+      backgroundColor: AppColors.studentLightGrey,
       appBar: AppBar(
         elevation: 0,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.orbitDarkBlue,
-                AppColors.orbitBlue,
+                AppColors.studentPurple,
+                AppColors.studentBlue,
               ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
         ),
-        leading: const Icon(Icons.arrow_back, color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: const Text(
           "Online Course",
           style: TextStyle(
@@ -64,7 +70,7 @@ class OnlineCourseScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
-                color: AppColors.orbitDarkBlue,
+                color: AppColors.studentPurple,
               ),
             ),
             const SizedBox(height: 8),
@@ -84,7 +90,7 @@ class OnlineCourseScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(18),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.orbitBlue.withOpacity(0.15),
+                    color: AppColors.studentBlue.withOpacity(0.15),
                     blurRadius: 12,
                     spreadRadius: 2,
                   )
@@ -94,12 +100,11 @@ class OnlineCourseScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  /// Banner
+                  /// Banner with Teacher Info
                   Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(18)),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
                         child: Image.network(
                           "https://i.imgur.com/2yaf2wb.png",
                           height: 190,
@@ -107,12 +112,10 @@ class OnlineCourseScreen extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-
                       Positioned.fill(
                         child: Container(
                           decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(18)),
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
                             gradient: LinearGradient(
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
@@ -124,7 +127,6 @@ class OnlineCourseScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       Positioned(
                         bottom: 18,
                         left: 18,
@@ -133,13 +135,11 @@ class OnlineCourseScreen extends StatelessWidget {
                           children: const [
                             CircleAvatar(
                               radius: 26,
-                              backgroundImage: NetworkImage(
-                                  "https://i.pravatar.cc/150?img=3"),
+                              backgroundImage: NetworkImage("https://i.pravatar.cc/150?img=3"),
                             ),
                             SizedBox(width: 14),
                             Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "Shivam Verma",
@@ -171,7 +171,7 @@ class OnlineCourseScreen extends StatelessWidget {
                     ],
                   ),
 
-                  /// Content
+                  /// Course Details
                   Padding(
                     padding: const EdgeInsets.all(18),
                     child: Column(
@@ -183,45 +183,39 @@ class OnlineCourseScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 21,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.orbitDarkBlue,
+                            color: AppColors.studentPurple,
                           ),
                         ),
 
                         const SizedBox(height: 14),
 
-                        buildIconRow(Icons.menu_book, "Class 1"),
+                        buildIconRow(Icons.menu_book, "Class 1", AppColors.studentBlue),
                         const SizedBox(height: 8),
-                        buildIconRow(Icons.play_arrow, "Lesson 2"),
+                        buildIconRow(Icons.play_arrow, "Lesson 2", AppColors.studentBlue),
                         const SizedBox(height: 8),
-                        buildIconRow(Icons.access_time, "02:00:00 Hrs"),
+                        buildIconRow(Icons.access_time, "02:00:00 Hrs", AppColors.studentBlue),
 
                         const SizedBox(height: 18),
 
                         /// Price + Rating
                         Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
                               "\$ 72.00",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.orbitBlue,
+                                color: AppColors.studentBlue,
                               ),
                             ),
                             Row(
                               children: const [
-                                Icon(Icons.star,
-                                    color: Colors.amber, size: 18),
-                                Icon(Icons.star,
-                                    color: Colors.amber, size: 18),
-                                Icon(Icons.star,
-                                    color: Colors.amber, size: 18),
-                                Icon(Icons.star_border,
-                                    color: Colors.amber, size: 18),
-                                Icon(Icons.star_border,
-                                    color: Colors.amber, size: 18),
+                                Icon(Icons.star, color: Colors.amber, size: 18),
+                                Icon(Icons.star, color: Colors.amber, size: 18),
+                                Icon(Icons.star, color: Colors.amber, size: 18),
+                                Icon(Icons.star_border, color: Colors.amber, size: 18),
+                                Icon(Icons.star_border, color: Colors.amber, size: 18),
                               ],
                             )
                           ],
@@ -235,14 +229,14 @@ class OnlineCourseScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 6),
 
-                        /// Orbit Progress Bar
+                        /// Progress Bar
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: const LinearProgressIndicator(
                             value: 0.0,
                             minHeight: 6,
-                            backgroundColor: Color(0xffBBDEFB),
-                            color: AppColors.orbitBlue,
+                            backgroundColor: Color(0xffE3F2FD),
+                            color: AppColors.studentBlue,
                           ),
                         ),
 
@@ -254,9 +248,8 @@ class OnlineCourseScreen extends StatelessWidget {
                               child: Container(
                                 height: 48,
                                 decoration: BoxDecoration(
-                                  color: AppColors.orbitLightBlue,
-                                  borderRadius:
-                                      BorderRadius.circular(12),
+                                  color: AppColors.studentBlue,
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Center(
                                   child: Text(
@@ -276,12 +269,11 @@ class OnlineCourseScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
                                     colors: [
-                                      AppColors.orbitDarkBlue,
-                                      AppColors.orbitBlue,
+                                      AppColors.studentPurple,
+                                      AppColors.studentBlue,
                                     ],
                                   ),
-                                  borderRadius:
-                                      BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Center(
                                   child: Text(
@@ -308,10 +300,19 @@ class OnlineCourseScreen extends StatelessWidget {
     );
   }
 
-  Widget buildIconRow(IconData icon, String text) {
+  Widget buildIconRow(IconData icon, String text, Color iconColor) {
     return Row(
-      children: const [
-        Icon(Icons.circle, size: 0), // dummy (avoid const error)
+      children: [
+        Icon(icon, color: iconColor, size: 18),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: const TextStyle(
+            color: Colors.black87,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ],
     );
   }

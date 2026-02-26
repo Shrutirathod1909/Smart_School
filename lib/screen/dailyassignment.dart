@@ -10,13 +10,23 @@ void main() {
 class DailyAssignmentScreen extends StatelessWidget {
   const DailyAssignmentScreen({super.key});
 
+  // 🎨 Color Orbit Palette
+  static const Color bgColor = Color(0xfff2f2f2);
+  static const Color floatingBtnColor = Color(0xffff5722); // Bright orange
+  static const List<Color> headerGradient = [Color(0xff42a5f5), Color(0xff7e57c2)]; // Blue → Purple
+  static const List<Color> cardHeaderGradient = [Color(0xffff7043), Color(0xffffca28)]; // Orange → Yellow
+  static const Color cardBgColor = Colors.white;
+  static const Color textColorPrimary = Colors.black87;
+  static const Color textColorSecondary = Colors.black54;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff2f2f2),
+      backgroundColor: bgColor,
 
+      // APP BAR
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade900,
+        backgroundColor: headerGradient[0],
         title: const Text(
           "Daily Assignment",
           style: TextStyle(color: Colors.white),
@@ -24,34 +34,28 @@ class DailyAssignmentScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
 
-      //////////////////////////////////////////////////////////////
-      /// FLOATING BUTTON (GRAY BG + WHITE ICON)
-      //////////////////////////////////////////////////////////////
-
+      // FLOATING BUTTON
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.grey.shade800,
+        backgroundColor: floatingBtnColor,
         onPressed: () {},
         child: const Icon(Icons.add, color: Colors.white),
       ),
 
-      //////////////////////////////////////////////////////////////
-      /// BODY
-      //////////////////////////////////////////////////////////////
-
+      // BODY
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            //////////////////////////////////////////////////////////
-            /// HEADER SECTION (LIGHT GREY + IMAGE)
-            //////////////////////////////////////////////////////////
-
+            // HEADER SECTION WITH GRADIENT
             Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
+                gradient: const LinearGradient(
+                    colors: headerGradient,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight),
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
@@ -64,21 +68,27 @@ class DailyAssignmentScreen extends StatelessWidget {
                           "Your Daily Assignment!",
                           style: TextStyle(
                               fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         SizedBox(height: 5),
                         Text(
                           "Stay on top of your daily tasks",
-                          style: TextStyle(color: Colors.black54),
+                          style: TextStyle(color: Colors.white70),
                         ),
                       ],
                     ),
                   ),
 
-                  /// 🔥 IMAGE INSTEAD OF ICON
-                  Image.asset(
-                    "assets/icons/daily.webp",
+                  // IMAGE/ICON
+                  Container(
                     height: 70,
+                    width: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.assignment, size: 40, color: Colors.white),
                   )
                 ],
               ),
@@ -86,10 +96,7 @@ class DailyAssignmentScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            //////////////////////////////////////////////////////////
-            /// ASSIGNMENT LIST
-            //////////////////////////////////////////////////////////
-
+            // ASSIGNMENT LIST
             Expanded(
               child: ListView(
                 children: [
@@ -99,7 +106,7 @@ class DailyAssignmentScreen extends StatelessWidget {
                     title: "Technology's Impact",
                     submissionDate: "3/1/2026",
                     description:
-                        "Technology has a profound and multifaceted impact on society, affecting various aspects of life, from communication and work to healthcare and education.",
+                        "Technology has a profound and multifaceted impact on society, affecting communication, work, healthcare, and education.",
                   ),
 
                   const SizedBox(height: 15),
@@ -130,10 +137,7 @@ class DailyAssignmentScreen extends StatelessWidget {
     );
   }
 
-  //////////////////////////////////////////////////////////////
-  /// ASSIGNMENT CARD WITH DARK TOP HEADER
-  //////////////////////////////////////////////////////////////
-
+  // ASSIGNMENT CARD WITH COLOR ORBIT HEADER
   static Widget assignmentCard({
     required String subject,
     required String title,
@@ -143,12 +147,12 @@ class DailyAssignmentScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Colors.white,
+        color: cardBgColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
+            color: Colors.grey.withOpacity(0.25),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           )
         ],
       ),
@@ -156,14 +160,14 @@ class DailyAssignmentScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          //////////////////////////////////////////////////////////
-          /// DARK GREY TOP SECTION
-          //////////////////////////////////////////////////////////
-
+          // COLOR ORBIT HEADER GRADIENT
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.grey.shade800,
+              gradient: const LinearGradient(
+                  colors: cardHeaderGradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(15),
                 topRight: Radius.circular(15),
@@ -184,13 +188,11 @@ class DailyAssignmentScreen extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {},
-                      icon: const Icon(Icons.edit,
-                          color: Colors.white),
+                      icon: const Icon(Icons.edit, color: Colors.white),
                     ),
                     IconButton(
                       onPressed: () {},
-                      icon: const Icon(Icons.delete,
-                          color: Colors.white),
+                      icon: const Icon(Icons.delete, color: Colors.white),
                     ),
                   ],
                 )
@@ -198,10 +200,7 @@ class DailyAssignmentScreen extends StatelessWidget {
             ),
           ),
 
-          //////////////////////////////////////////////////////////
-          /// CARD BODY
-          //////////////////////////////////////////////////////////
-
+          // CARD BODY
           Padding(
             padding: const EdgeInsets.all(15),
             child: Column(
@@ -211,14 +210,14 @@ class DailyAssignmentScreen extends StatelessWidget {
                 Text(
                   "Title: $title",
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w600, color: textColorPrimary),
                 ),
 
                 const SizedBox(height: 5),
 
                 Text(
                   "Submission Date: $submissionDate",
-                  style: const TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: textColorSecondary),
                 ),
 
                 const SizedBox(height: 12),
@@ -226,15 +225,14 @@ class DailyAssignmentScreen extends StatelessWidget {
                 const Text(
                   "Description:",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold, color: textColorPrimary),
                 ),
 
                 const SizedBox(height: 5),
 
                 Text(
                   description,
-                  style: const TextStyle(
-                      color: Colors.black87),
+                  style: const TextStyle(color: textColorPrimary),
                 ),
               ],
             ),

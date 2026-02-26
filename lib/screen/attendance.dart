@@ -12,7 +12,12 @@ class AttendanceScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xff4a4a4a),
         elevation: 0,
-        leading: const Icon(Icons.arrow_back, color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context); // Back button functional
+          },
+        ),
         title: const Text(
           "Attendance",
           style: TextStyle(color: Colors.white),

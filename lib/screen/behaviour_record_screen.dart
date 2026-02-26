@@ -1,34 +1,41 @@
 import 'package:flutter/material.dart';
 
+/// 🎨 Student Friendly Colors
+class AppColors {
+  static const Color primaryBlue = Color(0xff2962FF);
+  static const Color primaryPurple = Color(0xff9C27B0);
+  static const Color lightBg = Color(0xffF3F6FF);
+  static const Color lightCard = Color(0xffEDE7F6);
+  static const Color goodGreen = Color(0xff00C853);
+  static const Color warningOrange = Color(0xffFF6D00);
+}
+
 class BehaviourRecordScreen extends StatelessWidget {
   const BehaviourRecordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff2f4f8),
-    appBar: AppBar(
-  elevation: 0,
-  backgroundColor: const Color.fromARGB(255, 47, 50, 52),
-  centerTitle: true,
-  leading: IconButton(
-    icon: const Icon(
-      Icons.arrow_back,
-      color: Colors.white, // 👈 White Arrow
-    ),
-    onPressed: () {
-      Navigator.pop(context);
-    },
-  ),
-  title: const Text(
-    "Behaviour Record",
-    style: TextStyle(
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-    ),
-  ),
-),
-   body: ListView(
+      backgroundColor: AppColors.lightBg,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: AppColors.primaryPurple,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(
+          "Behaviour Record",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      body: ListView(
         padding: const EdgeInsets.all(16),
         children: const [
           BehaviourCard(
@@ -82,22 +89,22 @@ class BehaviourCard extends StatelessWidget {
 
     switch (status) {
       case "Excellent":
-        statusColor = Colors.green;
+        statusColor = AppColors.primaryBlue;
         statusIcon = Icons.star;
         break;
       case "Good":
-        statusColor = Colors.blue;
+        statusColor = AppColors.goodGreen;
         statusIcon = Icons.thumb_up;
         break;
       default:
-        statusColor = Colors.orange;
+        statusColor = AppColors.warningOrange;
         statusIcon = Icons.warning;
     }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.lightCard,
         borderRadius: BorderRadius.circular(18),
         boxShadow: const [
           BoxShadow(
@@ -114,7 +121,7 @@ class BehaviourCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: Colors.white,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(18),
                 topRight: Radius.circular(18),
@@ -137,8 +144,7 @@ class BehaviourCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(statusIcon,
-                          size: 16, color: statusColor),
+                      Icon(statusIcon, size: 16, color: statusColor),
                       const SizedBox(width: 6),
                       Text(
                         status,

@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 
+/// 🎨 NEW ATTRACTIVE COLORS
+class AppColors {
+  static const Color primaryBlue = Color(0xff2962FF);
+  static const Color primaryPurple = Color(0xff7B1FA2);
+  static const Color successGreen = Color(0xff00C853);
+  static const Color warningOrange = Color(0xffFF6D00);
+  static const Color dangerRed = Color(0xffD50000);
+  static const Color lightBg = Color(0xffF3F0FF);
+}
+
 class SyllabusStatusScreen extends StatelessWidget {
   const SyllabusStatusScreen({super.key});
 
@@ -8,87 +18,101 @@ class SyllabusStatusScreen extends StatelessWidget {
       "name": "Mathematics",
       "status": "Completed",
       "progress": 0.9,
-      "image": "assets/icons/math.webp", // Add your local image
-      "color": Colors.green
+      "image": "assets/icons/math.webp",
+      "color": AppColors.successGreen
     },
     {
       "name": "Science",
       "status": "In Progress",
       "progress": 0.6,
       "image": "assets/icons/Science.webp",
-      "color": Colors.orange
+      "color": AppColors.warningOrange
     },
     {
       "name": "English",
       "status": "Pending",
       "progress": 0.3,
       "image": "assets/icons/english.webp",
-      "color": Colors.red
+      "color": AppColors.dangerRed
     },
     {
       "name": "Marathi",
       "status": "Pending",
       "progress": 0.3,
       "image": "assets/icons/marathi.webp",
-      "color": Color.fromARGB(255, 244, 92, 143)
+      "color": AppColors.dangerRed
     },
     {
       "name": "Hindi",
       "status": "Pending",
       "progress": 0.3,
       "image": "assets/icons/hindi.webp",
-      "color": Color.fromARGB(255, 86, 144, 246)
+      "color": AppColors.dangerRed
     },
     {
       "name": "History",
       "status": "Completed",
       "progress": 1.0,
       "image": "assets/icons/History.jpg",
-      "color": Colors.green
+      "color": AppColors.successGreen
     },
     {
       "name": "Geography",
       "status": "In Progress",
       "progress": 0.5,
       "image": "assets/icons/Geography.webp",
-      "color": Colors.orange
+      "color": AppColors.warningOrange
     },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff4f6f9),
+      backgroundColor: AppColors.lightBg,
+
+      /// 🔵🟣 Gradient AppBar
       appBar: AppBar(
-        backgroundColor: const Color(0xff424242),
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.primaryBlue,
+                AppColors.primaryPurple,
+              ],
+            ),
+          ),
+        ),
         centerTitle: true,
         title: const Text(
           "Syllabus Status",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
+
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: subjects.length,
         itemBuilder: (context, index) {
           var subject = subjects[index];
+
           return Card(
-            elevation: 5,
+            elevation: 6,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(18),
             ),
-            margin: const EdgeInsets.only(bottom: 16),
+            margin: const EdgeInsets.only(bottom: 18),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  // Subject Image
+
+                  /// Subject Image
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                     child: Image.asset(
                       subject["image"],
                       width: 60,
@@ -96,32 +120,46 @@ class SyllabusStatusScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
+
                   const SizedBox(width: 16),
 
-                  // Subject Info
+                  /// Subject Info
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+
                         Text(
                           subject["name"],
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryPurple,
+                          ),
                         ),
+
                         const SizedBox(height: 8),
-                        LinearProgressIndicator(
-                          value: subject["progress"],
-                          color: subject["color"],
-                          backgroundColor: Colors.grey.shade300,
-                          minHeight: 8,
+
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LinearProgressIndicator(
+                            value: subject["progress"],
+                            color: subject["color"],
+                            backgroundColor:
+                                subject["color"].withOpacity(0.15),
+                            minHeight: 10,
+                          ),
                         ),
-                        const SizedBox(height: 5),
+
+                        const SizedBox(height: 6),
+
                         Text(
                           subject["status"],
                           style: TextStyle(
-                              color: subject["color"],
-                              fontWeight: FontWeight.bold),
-                        )
+                            color: subject["color"],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
                   ),

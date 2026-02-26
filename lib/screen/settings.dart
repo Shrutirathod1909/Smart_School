@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:market/screen/help&support.dart';
 
+/// 🎨 ORBIT COLORS
+class AppColors {
+  static const Color orbitDarkBlue = Color(0xff0D47A1);
+  static const Color orbitBlue = Color(0xff1565C0);
+  static const Color orbitLightBlue = Color(0xff42A5F5);
+  static const Color orbitSky = Color(0xffE3F2FD);
+}
+
 class AppSettingsScreen extends StatefulWidget {
   const AppSettingsScreen({super.key});
 
@@ -10,7 +18,6 @@ class AppSettingsScreen extends StatefulWidget {
 
 class _AppSettingsScreenState extends State<AppSettingsScreen> {
   bool notificationsEnabled = true;
- 
 
   Widget buildSettingTile({
     required IconData icon,
@@ -21,17 +28,17 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
     VoidCallback? onTap,
   }) {
     return Card(
-      elevation: 3,
+      elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       margin: const EdgeInsets.only(bottom: 15),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         leading: CircleAvatar(
-          radius: 22,
-          backgroundColor: iconColor.withOpacity(0.15),
-          child: Icon(icon, color: iconColor),
+          radius: 24,
+          backgroundColor: iconColor.withOpacity(0.2),
+          child: Icon(icon, color: iconColor, size: 24),
         ),
         title: Text(
           title,
@@ -50,15 +57,16 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.orbitSky,
       appBar: AppBar(
         title: const Text(
           "Settings",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFF383839),
-        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
+        backgroundColor: AppColors.orbitDarkBlue,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -68,7 +76,7 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
             /// Notifications Toggle
             buildSettingTile(
               icon: Icons.notifications,
-              iconColor: Colors.orange,
+              iconColor: AppColors.orbitBlue,
               title: "Notifications",
               subtitle: "Enable or disable notifications",
               trailingWidget: Switch(
@@ -78,26 +86,27 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                     notificationsEnabled = value;
                   });
                 },
-                activeColor: Colors.orange,
+                activeColor: AppColors.orbitBlue,
               ),
             ),
 
-            
+            /// Help & Support
             buildSettingTile(
               icon: Icons.help_outline,
-              iconColor: Colors.grey,
+              iconColor: AppColors.orbitLightBlue,
               title: "Help & Support",
               subtitle: "FAQs & contact us",
               onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const HelpSupportPage(),
-      ),
-    );
-  },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const HelpSupportPage(),
+                  ),
+                );
+              },
             ),
-          ],
+
+                   ],
         ),
       ),
     );

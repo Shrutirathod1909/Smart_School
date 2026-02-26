@@ -135,18 +135,6 @@ class _SplashScreenState extends State<SplashScreen>
                 const SizedBox(height: 30),
 
                 const Text(
-                  "Smart School",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                const Text(
                   "Learn. Grow. Succeed.",
                   style: TextStyle(
                     fontSize: 15,

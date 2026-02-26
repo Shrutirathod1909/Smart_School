@@ -19,28 +19,56 @@ class MyApp extends StatelessWidget {
 class GmeetLiveClassesScreen extends StatelessWidget {
   const GmeetLiveClassesScreen({super.key});
 
+  // Color Orbit Palette
+  static const Color bgColor = Color(0xffF5F6FA);
+  static const List<Color> appBarGradient = [Color(0xff42a5f5), Color(0xff7e57c2)];
+  static const List<Color> cardHeaderGradient = [Color(0xffff7043), Color(0xffffca28)];
+  static const List<Color> liveBadgeGradient = [Color(0xfff44336), Color(0xffff5252)];
+  static const Color cardBgColor = Colors.white;
+  static const Color textColorPrimary = Colors.black87;
+  static const Color textColorSecondary = Colors.black54;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff3f3f3),
-      appBar: AppBar(
-        backgroundColor: const Color(0xff4a4a4a),
-        elevation: 0,
-        leading: const Icon(Icons.arrow_back, color: Colors.white),
-        title: const Text(
-          "Gmeet Live Classes",
-          style: TextStyle(color: Colors.white),
-        ),
+      backgroundColor: bgColor,
+     appBar: AppBar(
+  flexibleSpace: Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        colors: appBarGradient,
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
-      body: SingleChildScrollView(
+    ),
+  ),
+  elevation: 0,
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () {
+      Navigator.pop(context); // <-- Makes the back button responsive
+    },
+  ),
+  title: const Text(
+    "Gmeet Live Classes",
+    style: TextStyle(color: Colors.white),
+  ),
+),    body: SingleChildScrollView(
         child: Column(
           children: [
 
             /// Header Section
             Container(
               width: double.infinity,
-              color: Colors.white,
               padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: appBarGradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(15),
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,42 +78,48 @@ class GmeetLiveClassesScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
-                          "Your Gmeet Live Classe...",
+                          "Your Gmeet Live Classes are here!",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         SizedBox(height: 6),
                         Text(
                           "Join your virtual classrooms",
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: Colors.white70,
                             fontSize: 14,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Image.asset(
-                    "assets/icons/meets.jpg",
-                    height: 80,
-                    fit: BoxFit.contain,
+                  Container(
+                    height: 70,
+                    width: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.video_call, size: 40, color: Colors.white),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 15),
 
-            /// Cards
+            /// Class Cards
             classCard(
               title: "English Classes",
               duration: "45",
               className: "Class 1 A",
               dateTime: "30/01/2026 04:30 AM",
-              host: "Jason Sharlton(Teacher: 90006)",
+              host: "Jason Sharlton (Teacher: 90006)",
               description: "English Classes",
+              isLive: true,
             ),
 
             const SizedBox(height: 15),
@@ -95,8 +129,9 @@ class GmeetLiveClassesScreen extends StatelessWidget {
               duration: "23",
               className: "Class 1 A",
               dateTime: "24/01/2026 04:27 PM",
-              host: "aman (Teacher: 654)",
+              host: "Aman (Teacher: 654)",
               description: "Not available",
+              isLive: false,
             ),
 
             const SizedBox(height: 15),
@@ -108,6 +143,7 @@ class GmeetLiveClassesScreen extends StatelessWidget {
               dateTime: "30/01/2026 04:30 AM",
               host: "Jason",
               description: "GK Classes",
+              isLive: true,
             ),
 
             const SizedBox(height: 20),
@@ -124,11 +160,12 @@ class GmeetLiveClassesScreen extends StatelessWidget {
     required String dateTime,
     required String host,
     required String description,
+    bool isLive = false,
   }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBgColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -144,9 +181,13 @@ class GmeetLiveClassesScreen extends StatelessWidget {
           /// Card Header
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-            decoration: const BoxDecoration(
-              color: Color(0xffe9ecef),
-              borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: cardHeaderGradient,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
               ),
@@ -154,19 +195,20 @@ class GmeetLiveClassesScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
-                const Text(
+                Text(
                   "Join",
                   style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w600,
-                  ),
+                      color: isLive ? Colors.white : Colors.white70,
+                      fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -177,7 +219,7 @@ class GmeetLiveClassesScreen extends StatelessWidget {
             padding: const EdgeInsets.all(15),
             child: Column(
               children: [
-                rowItem("Class Duration (Minutes)", duration, showLive: true),
+                rowItem("Class Duration (Minutes)", duration, showLive: isLive),
                 rowItem("Class", className),
                 rowItem("Date Time", dateTime),
                 rowItem("Class Host", host),
@@ -190,8 +232,7 @@ class GmeetLiveClassesScreen extends StatelessWidget {
     );
   }
 
-  static Widget rowItem(String title, String value,
-      {bool showLive = false}) {
+  static Widget rowItem(String title, String value, {bool showLive = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
@@ -199,30 +240,29 @@ class GmeetLiveClassesScreen extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 14),
-            ),
+            child: Text(title, style: const TextStyle(fontSize: 14)),
           ),
           Expanded(
             flex: 3,
             child: Row(
               children: [
                 Expanded(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  child: Text(value,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      )),
                 ),
                 if (showLive)
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      gradient: const LinearGradient(
+                        colors: liveBadgeGradient,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: const Text(

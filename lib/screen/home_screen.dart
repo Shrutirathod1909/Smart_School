@@ -39,26 +39,15 @@ class HomeScreen extends StatelessWidget {
   centerTitle: true,
   title: Container(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-    decoration: BoxDecoration(
-      color: Colors.lightGreen,
-      borderRadius: BorderRadius.circular(12),
-    ),
+    
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Image.asset(
           "assets/icons/orbit_logo.jpeg",
-          height: 20,
+          height: 38,
         ),
         const SizedBox(width: 8),
-        const Text(
-          "SMART SCHOOL",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-            color: Colors.black,
-          ),
-        ),
       ],
     ),
   ),

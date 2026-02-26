@@ -1,18 +1,42 @@
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: TransportRoutesScreen(),
+    );
+  }
+}
+
 class TransportRoutesScreen extends StatelessWidget {
   const TransportRoutesScreen({super.key});
+
+  // 🎨 Color Palette
+  final Color primaryBlue = const Color(0xFF1E88E5);
+  final Color primaryGreen = const Color(0xFF43A047);
+  final Color primaryOrange = const Color(0xFFFB8C00);
+  final Color cardBlue = const Color(0xFFD9ECEC);
+  final Color bgGrey = const Color(0xFFF2F2F2);
+  final Color timelineGrey = const Color(0xFFB0BEC5);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff2f2f2),
+      backgroundColor: bgGrey,
       appBar: AppBar(
         backgroundColor: Colors.grey[800],
-        iconTheme: const IconThemeData(color: Colors.white), // back icon white
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           "Transport Routes",
-          style: TextStyle(color: Colors.white), // text white
+          style: TextStyle(color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -27,18 +51,19 @@ class TransportRoutesScreen extends StatelessWidget {
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         "Transport",
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
+                          color: primaryBlue,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         "Track your school transport routes",
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -50,7 +75,6 @@ class TransportRoutesScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 15),
 
             // Route Info Card
@@ -60,6 +84,13 @@ class TransportRoutesScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.15),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  )
+                ],
               ),
               child: Column(
                 children: const [
@@ -73,24 +104,29 @@ class TransportRoutesScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
 
             // Timeline Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
-                children: const [
+                children: [
                   RouteCard(
                     title: "Brooklyn West",
                     distance: "10.0",
                     time: "12:30 PM",
+                    primaryBlue: primaryBlue,
+                    cardBlue: cardBlue,
+                    timelineGrey: timelineGrey,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   RouteCard(
                     title: "Brooklyn North",
                     distance: "20.0",
                     time: "11:00 AM",
+                    primaryBlue: primaryBlue,
+                    cardBlue: cardBlue,
+                    timelineGrey: timelineGrey,
                   ),
                 ],
               ),
@@ -118,7 +154,10 @@ class InfoRow extends StatelessWidget {
           Text(title, style: const TextStyle(color: Colors.grey)),
           Text(
             value,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+            ),
           ),
         ],
       ),
@@ -130,12 +169,18 @@ class RouteCard extends StatelessWidget {
   final String title;
   final String distance;
   final String time;
+  final Color primaryBlue;
+  final Color cardBlue;
+  final Color timelineGrey;
 
   const RouteCard({
     super.key,
     required this.title,
     required this.distance,
     required this.time,
+    required this.primaryBlue,
+    required this.cardBlue,
+    required this.timelineGrey,
   });
 
   @override
@@ -151,10 +196,11 @@ class RouteCard extends StatelessWidget {
               height: 18,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(width: 3, color: Colors.black),
+                color: Colors.white,
+                border: Border.all(width: 3, color: primaryBlue),
               ),
             ),
-            Container(width: 2, height: 100, color: Colors.grey[400]),
+            Container(width: 2, height: 100, color: timelineGrey),
           ],
         ),
         const SizedBox(width: 12),
@@ -164,7 +210,7 @@ class RouteCard extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xffd9ecec),
+              color: cardBlue,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -172,29 +218,34 @@ class RouteCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
+                    color: primaryBlue,
                   ),
                 ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    const Icon(Icons.directions_bus, size: 20),
+                    Icon(Icons.directions_bus, size: 20, color: primaryBlue),
                     const SizedBox(width: 8),
-                    Text("Distance(km)"),
+                    Text("Distance(km)", style: TextStyle(color: primaryBlue)),
                     const Spacer(),
-                    Text(distance),
+                    Text(distance,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: primaryBlue)),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.access_time, size: 20),
+                    Icon(Icons.access_time, size: 20, color: primaryBlue),
                     const SizedBox(width: 8),
-                    Text("Pickup Time"),
+                    Text("Pickup Time", style: TextStyle(color: primaryBlue)),
                     const Spacer(),
-                    Text(time),
+                    Text(time,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: primaryBlue)),
                   ],
                 ),
               ],

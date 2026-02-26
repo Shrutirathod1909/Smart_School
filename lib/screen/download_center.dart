@@ -11,78 +11,83 @@ class DownloadCenterScreen extends StatefulWidget {
   const DownloadCenterScreen({super.key});
 
   @override
-  State<DownloadCenterScreen> createState() =>
-      _DownloadCenterScreenState();
+  State<DownloadCenterScreen> createState() => _DownloadCenterScreenState();
 }
 
-class _DownloadCenterScreenState
-    extends State<DownloadCenterScreen> {
-
+class _DownloadCenterScreenState extends State<DownloadCenterScreen> {
   String selectedCategory = "Contents";
+
+  // Color Orbit Palette
+  final Color bgColor = const Color(0xffF5F6FA);
+  final List<Color> appBarGradient = [Color(0xff42a5f5), Color(0xff7e57c2)];
+  final List<Color> headerGradient = [Color(0xffff7043), Color(0xffffca28)];
+  final List<Color> cardGradient1 = [Color(0xff81d4fa), Color(0xffb39ddb)];
+  final List<Color> cardGradient2 = [Color(0xffffab91), Color(0xfffff59d)];
+  final Color categorySelected = Color(0xff7e57c2);
+  final Color categoryUnselected = Colors.grey;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff2f2f2),
-
+      backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade900,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: appBarGradient,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
         title: const Text(
           "Download Center",
           style: TextStyle(color: Colors.white),
         ),
-        iconTheme:
-            const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            //////////////////////////////////////////////////////
             /// HEADER
-            //////////////////////////////////////////////////////
-
             Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius:
-                    BorderRadius.circular(15),
+                gradient: LinearGradient(
+                  colors: headerGradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(15),
               ),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                      children: [
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
                         Text(
                           "Your Download Center is here!",
                           style: TextStyle(
                               fontSize: 18,
-                              fontWeight:
-                                  FontWeight.bold),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         SizedBox(height: 5),
                         Text(
                           "Download and view all your school documents and video tutorials",
-                          style: TextStyle(
-                              color: Colors.black54),
+                          style: TextStyle(color: Colors.white70),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade800,
-                      borderRadius:
-                          BorderRadius.circular(
-                              15),
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: const Icon(
                       Icons.download,
@@ -95,10 +100,7 @@ class _DownloadCenterScreenState
 
             const SizedBox(height: 20),
 
-            //////////////////////////////////////////////////////
-            /// CATEGORY TEXT (NO BUTTON STYLE)
-            //////////////////////////////////////////////////////
-
+            /// CATEGORY TEXT (WITH COLOR ORBIT)
             Row(
               children: [
                 categoryText("Contents"),
@@ -109,16 +111,11 @@ class _DownloadCenterScreenState
 
             const SizedBox(height: 20),
 
-            //////////////////////////////////////////////////////
             /// DATA LIST
-            //////////////////////////////////////////////////////
-
             Expanded(
               child: ListView(
-                children: selectedCategory ==
-                        "Contents"
-                    ? contentData()
-                    : videoData(),
+                children:
+                    selectedCategory == "Contents" ? contentData() : videoData(),
               ),
             ),
           ],
@@ -127,13 +124,9 @@ class _DownloadCenterScreenState
     );
   }
 
-  //////////////////////////////////////////////////////////
   /// CATEGORY TEXT
-  //////////////////////////////////////////////////////////
-
   Widget categoryText(String title) {
-    bool isSelected =
-        selectedCategory == title;
+    bool isSelected = selectedCategory == title;
 
     return GestureDetector(
       onTap: () {
@@ -146,18 +139,13 @@ class _DownloadCenterScreenState
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
-          color: isSelected
-              ? Colors.black
-              : Colors.grey,
+          color: isSelected ? categorySelected : categoryUnselected,
         ),
       ),
     );
   }
 
-  //////////////////////////////////////////////////////////
   /// DOWNLOAD CARD
-  //////////////////////////////////////////////////////////
-
   Widget downloadCard({
     required String title,
     required String shareDate,
@@ -165,90 +153,68 @@ class _DownloadCenterScreenState
     required String sharedBy,
     required String description,
     required String createdAt,
+    bool isAlternate = false,
   }) {
+    List<Color> gradientColors = isAlternate ? cardGradient2 : cardGradient1;
+
     return Container(
-      margin:
-          const EdgeInsets.only(bottom: 15),
+      margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(15),
+        gradient: LinearGradient(
+          colors: gradientColors,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color:
-                Colors.grey.withOpacity(0.2),
-            blurRadius: 5,
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
           )
         ],
       ),
       child: Column(
         children: [
-
           /// TOP TITLE
           Container(
-            padding:
-                const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius:
-                  const BorderRadius.only(
-                topLeft:
-                    Radius.circular(15),
-                topRight:
-                    Radius.circular(15),
+              color: Colors.white24,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
               ),
             ),
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment
-                      .spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
                     title,
-                    style:
-                        const TextStyle(
-                      fontWeight:
-                          FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
                   ),
                 ),
-                const Icon(Icons.attach_file)
+                const Icon(Icons.attach_file, color: Colors.black87)
               ],
             ),
           ),
 
           /// DETAILS
           Padding(
-            padding:
-                const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                buildRow("Share Date:",
-                    shareDate),
-                buildRow("Valid Upto:",
-                    validUpto),
-                buildRow("Shared By:",
-                    sharedBy),
-
+                buildRow("Share Date:", shareDate),
+                buildRow("Valid Upto:", validUpto),
+                buildRow("Shared By:", sharedBy),
                 const SizedBox(height: 8),
-
-                const Text(
-                  "Description:",
-                  style: TextStyle(
-                      fontWeight:
-                          FontWeight.bold),
-                ),
+                const Text("Description:", style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(description),
-
                 const SizedBox(height: 8),
-
-                buildRow("Created At:",
-                    createdAt),
+                buildRow("Created At:", createdAt),
               ],
             ),
           ),
@@ -257,26 +223,17 @@ class _DownloadCenterScreenState
     );
   }
 
-  //////////////////////////////////////////////////////////
   /// ROW BUILDER
-  //////////////////////////////////////////////////////////
-
-  Widget buildRow(
-      String title, String value) {
+  Widget buildRow(String title, String value) {
     return Padding(
-      padding:
-          const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.only(bottom: 4),
       child: RichText(
         text: TextSpan(
-          style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14),
+          style: const TextStyle(color: Colors.black87, fontSize: 14),
           children: [
             TextSpan(
               text: "$title ",
-              style: const TextStyle(
-                  fontWeight:
-                      FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             TextSpan(text: value),
           ],
@@ -285,10 +242,7 @@ class _DownloadCenterScreenState
     );
   }
 
-  //////////////////////////////////////////////////////////
   /// CONTENT DATA
-  //////////////////////////////////////////////////////////
-
   List<Widget> contentData() {
     return [
       downloadCard(
@@ -296,28 +250,23 @@ class _DownloadCenterScreenState
         shareDate: "01/07/2025",
         validUpto: "31/07/2025",
         sharedBy: "Joe Black (9000)",
-        description:
-            "Science Study Syllabus",
-        createdAt:
-            "01/07/2025 14:26",
+        description: "Science Study Syllabus",
+        createdAt: "01/07/2025 14:26",
+        isAlternate: false,
       ),
       downloadCard(
         title: "New Books List",
         shareDate: "03/06/2025",
         validUpto: "30/06/2025",
         sharedBy: "Joe Black (9000)",
-        description:
-            "Updated book list for new academic year.",
-        createdAt:
-            "03/06/2025 09:54",
+        description: "Updated book list for new academic year.",
+        createdAt: "03/06/2025 09:54",
+        isAlternate: true,
       ),
     ];
   }
 
-  //////////////////////////////////////////////////////////
   /// VIDEO DATA
-  //////////////////////////////////////////////////////////
-
   List<Widget> videoData() {
     return [
       downloadCard(
@@ -325,10 +274,9 @@ class _DownloadCenterScreenState
         shareDate: "01/05/2025",
         validUpto: "31/05/2025",
         sharedBy: "Joe Black (9000)",
-        description:
-            "Fees structure explanation video tutorial.",
-        createdAt:
-            "01/05/2025 10:15",
+        description: "Fees structure explanation video tutorial.",
+        createdAt: "01/05/2025 10:15",
+        isAlternate: false,
       ),
     ];
   }

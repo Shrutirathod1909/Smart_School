@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// 🎨 ORBIT COLORS (Updated Multi Color Theme)
+class AppColors {
+  static const Color orbitDarkBlue = Color(0xff0D47A1);
+  static const Color orbitBlue = Color(0xff1565C0);
+  static const Color orbitPurple = Color(0xff8E24AA);
+
+  static const Color orbitGreen = Color(0xff2E7D32);
+  static const Color orbitOrange = Color(0xffF57C00);
+  static const Color orbitRed = Color(0xffC62828);
+
+  static const Color orbitSky = Color(0xffE3F2FD);
+}
+
 class ProfessionalTeacherReview extends StatefulWidget {
   const ProfessionalTeacherReview({super.key});
 
@@ -20,24 +33,23 @@ class _ProfessionalTeacherReviewState
 
     TextEditingController nameController = TextEditingController(
         text: editIndex != null ? reviews[editIndex]["name"] : "");
-
     TextEditingController professionController = TextEditingController(
         text: editIndex != null ? reviews[editIndex]["profession"] : "");
-
     TextEditingController commentController = TextEditingController(
         text: editIndex != null ? reviews[editIndex]["comment"] : "");
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
       ),
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
-            Widget buildStars(int value, Function(int) onChanged) {
+
+            Widget buildStars(
+                int value, Function(int) onChanged, Color activeColor) {
               return Row(
                 children: List.generate(
                   5,
@@ -45,7 +57,7 @@ class _ProfessionalTeacherReviewState
                     icon: Icon(
                       Icons.star,
                       color: index < value
-                          ? Colors.orange
+                          ? activeColor
                           : Colors.grey.shade300,
                     ),
                     onPressed: () =>
@@ -59,9 +71,7 @@ class _ProfessionalTeacherReviewState
               return InputDecoration(
                 hintText: hint,
                 filled: true,
-                fillColor: Colors.grey.shade100,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                fillColor: AppColors.orbitSky,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -73,123 +83,96 @@ class _ProfessionalTeacherReviewState
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Center(
-                        child: Text(
-                          "Teacher Review",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    /// 🟣 Title
+                    Center(
+                      child: Text(
+                        "Teacher Review",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.orbitPurple,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                    ),
+                    const SizedBox(height: 20),
 
-                      const Text("Teacher Name"),
-                      const SizedBox(height: 6),
-                      TextField(
-                        controller: nameController,
-                        decoration:
-                            inputStyle("Enter teacher name"),
-                      ),
+                    const Text("Teacher Name"),
+                    TextField(
+                      controller: nameController,
+                      decoration: inputStyle("Enter teacher name"),
+                    ),
+                    const SizedBox(height: 15),
 
-                      const SizedBox(height: 15),
+                    const Text("Profession / Subject"),
+                    TextField(
+                      controller: professionController,
+                      decoration: inputStyle("Enter subject"),
+                    ),
+                    const SizedBox(height: 15),
 
-                      const Text("Profession / Subject"),
-                      const SizedBox(height: 6),
-                      TextField(
-                        controller: professionController,
-                        decoration:
-                            inputStyle("Enter subject or profession"),
-                      ),
+                    const Text("Teaching Quality"),
+                    buildStars(teaching, (val) => teaching = val,
+                        AppColors.orbitGreen),
 
-                      const SizedBox(height: 15),
+                    const Text("Communication"),
+                    buildStars(communication, (val) => communication = val,
+                        AppColors.orbitOrange),
 
-                      const Text("Teaching Quality"),
-                      buildStars(teaching, (val) => teaching = val),
+                    const Text("Behavior & Support"),
+                    buildStars(behavior, (val) => behavior = val,
+                        AppColors.orbitRed),
 
-                      const Text("Communication"),
-                      buildStars(
-                          communication, (val) => communication = val),
+                    const SizedBox(height: 10),
 
-                      const Text("Behavior & Support"),
-                      buildStars(behavior, (val) => behavior = val),
+                    const Text("Comment"),
+                    TextField(
+                      controller: commentController,
+                      decoration: inputStyle("Write your review..."),
+                      maxLines: 3,
+                    ),
 
-                      const SizedBox(height: 10),
+                    const SizedBox(height: 20),
 
-                      const Text("Comment"),
-                      const SizedBox(height: 6),
-                      TextField(
-                        controller: commentController,
-                        decoration:
-                            inputStyle("Write your review..."),
-                        maxLines: 3,
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xFF393939),
-                          minimumSize:
-                              const Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(12),
-                          ),
+                    /// 🔵 Submit Button
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.orbitBlue,
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        onPressed: () {
-                          if (nameController.text.isEmpty ||
-                              professionController.text.isEmpty ||
-                              teaching == 0 ||
-                              communication == 0 ||
-                              behavior == 0) {
-                            return;
-                          }
+                      ),
+                      onPressed: () {
+                        if (nameController.text.isEmpty ||
+                            professionController.text.isEmpty ||
+                            teaching == 0 ||
+                            communication == 0 ||
+                            behavior == 0) return;
 
-                          setState(() {
-                            if (editIndex != null) {
-                              reviews[editIndex] = {
-                                "name": nameController.text,
-                                "profession":
-                                    professionController.text,
-                                "teaching": teaching,
-                                "communication": communication,
-                                "behavior": behavior,
-                                "comment":
-                                    commentController.text,
-                              };
-                            } else {
-                              reviews.add({
-                                "name": nameController.text,
-                                "profession":
-                                    professionController.text,
-                                "teaching": teaching,
-                                "communication": communication,
-                                "behavior": behavior,
-                                "comment":
-                                    commentController.text,
-                              });
-                            }
+                        setState(() {
+                          reviews.add({
+                            "name": nameController.text,
+                            "profession": professionController.text,
+                            "teaching": teaching,
+                            "communication": communication,
+                            "behavior": behavior,
+                            "comment": commentController.text,
                           });
+                        });
 
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          editIndex != null ? "Update" : "Submit",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Submit",
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -199,16 +182,14 @@ class _ProfessionalTeacherReviewState
     );
   }
 
-  Widget buildStarDisplay(int rating) {
+  Widget buildStarDisplay(int rating, Color color) {
     return Row(
       children: List.generate(
         5,
         (index) => Icon(
           Icons.star,
           size: 16,
-          color: index < rating
-              ? Colors.orange
-              : Colors.grey.shade300,
+          color: index < rating ? color : Colors.grey.shade300,
         ),
       ),
     );
@@ -217,26 +198,22 @@ class _ProfessionalTeacherReviewState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.orbitSky,
+
+      /// 🔵 AppBar
       appBar: AppBar(
-        title: const Text(
-          "Teacher Reviews",
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: const Color(0xFF383839),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+        title: const Text("Teacher Reviews",
+            style: TextStyle(color: Colors.white)),
+        backgroundColor: AppColors.orbitDarkBlue,
       ),
+
       body: reviews.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 "No Reviews Yet",
                 style: TextStyle(
+                  color: AppColors.orbitPurple,
                   fontSize: 18,
-                  color: Colors.grey,
                 ),
               ),
             )
@@ -254,61 +231,45 @@ class _ProfessionalTeacherReviewState
                   child: Padding(
                     padding: const EdgeInsets.all(15),
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+
                         Row(
                           children: [
-                            const CircleAvatar(
-                              radius: 25,
-                              backgroundColor:
-                                  Color(0xFF5C5C5D),
-                              child: Icon(Icons.person,
+                            CircleAvatar(
+                              backgroundColor: AppColors.orbitBlue,
+                              child: const Icon(Icons.person,
                                   color: Colors.white),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
-                              child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                children: [
-                                  Text(review["name"],
-                                      style: const TextStyle(
-                                          fontWeight:
-                                              FontWeight.bold,
-                                          fontSize: 16)),
-                                  Text(review["profession"],
-                                      style: TextStyle(
-                                          color: Colors
-                                              .grey.shade600)),
-                                ],
+                              child: Text(
+                                review["name"],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.orbitPurple,
+                                ),
                               ),
                             ),
                             IconButton(
-                              onPressed: () =>
-                                  openReviewForm(
-                                      editIndex: index),
-                              icon: const Icon(Icons.edit,
-                                  color: Colors.blue),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  reviews.removeAt(index);
-                                });
-                              },
+                              onPressed: () {},
                               icon: const Icon(Icons.delete,
-                                  color: Colors.red),
-                            ),
+                                  color: AppColors.orbitRed),
+                            )
                           ],
                         ),
+
                         const SizedBox(height: 10),
                         const Text("Teaching"),
-                        buildStarDisplay(review["teaching"]),
+                        buildStarDisplay(
+                            review["teaching"], AppColors.orbitGreen),
                         const Text("Communication"),
-                        buildStarDisplay(review["communication"]),
+                        buildStarDisplay(
+                            review["communication"], AppColors.orbitOrange),
                         const Text("Behavior"),
-                        buildStarDisplay(review["behavior"]),
+                        buildStarDisplay(
+                            review["behavior"], AppColors.orbitRed),
+
                         const SizedBox(height: 8),
                         Text(review["comment"].isEmpty
                             ? "No Comment"
@@ -319,8 +280,10 @@ class _ProfessionalTeacherReviewState
                 );
               },
             ),
+
+      /// 🔵 FAB
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF464646),
+        backgroundColor: AppColors.orbitBlue,
         onPressed: () => openReviewForm(),
         child: const Icon(Icons.add, color: Colors.white),
       ),

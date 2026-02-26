@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 
+/// 🎨 ORBIT SCIENCE COLORS (from your logo)
+class AppColors {
+  static const Color orbitRed = Color(0xFFD32F2F);
+  static const Color orbitGreen = Color(0xFF388E3C);
+  static const Color orbitOrange = Color(0xFFF57C00);
+  static const Color orbitPurple = Color(0xFF8E24AA);
+  static const Color orbitLightGrey = Color(0xFFE0E0E0);
+  static const Color orbitBackground = Color(0xFFF9F9F9);
+}
+
 void main() {
   runApp(const MyApp());
 }
@@ -22,9 +32,9 @@ class ExaminationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffeef1f5),
+      backgroundColor: AppColors.orbitBackground,
       appBar: AppBar(
-        backgroundColor: const Color(0xff505B63),
+        backgroundColor: AppColors.orbitRed,
         centerTitle: true,
         title: const Text(
           "Examination",
@@ -89,7 +99,7 @@ class ExamCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade300,
+            color: AppColors.orbitOrange.withOpacity(0.15),
             blurRadius: 8,
             spreadRadius: 2,
           )
@@ -103,6 +113,7 @@ class ExamCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
+              color: AppColors.orbitRed,
             ),
           ),
           const Divider(height: 25),
@@ -138,7 +149,7 @@ class ExamCard extends StatelessWidget {
                     horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
                   color:
-                      isCompleted ? Colors.green : Colors.orange,
+                      isCompleted ? AppColors.orbitGreen : AppColors.orbitPurple,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -153,15 +164,13 @@ class ExamCard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (_) =>
-                                ExamDetailsPage(
-                                    examName: examName),
+                                ExamDetailsPage(examName: examName),
                           ),
                         );
                       }
                     : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      const Color(0xff505B63),
+                  backgroundColor: AppColors.orbitRed,
                 ),
                 child: const Text(
                   "View Result",
@@ -179,8 +188,7 @@ class ExamCard extends StatelessWidget {
 class ExamDetailsPage extends StatelessWidget {
   final String examName;
 
-  const ExamDetailsPage(
-      {super.key, required this.examName});
+  const ExamDetailsPage({super.key, required this.examName});
 
   @override
   Widget build(BuildContext context) {
@@ -200,12 +208,11 @@ class ExamDetailsPage extends StatelessWidget {
         (totalObtained / totalMarks) * 100;
 
     return Scaffold(
-      backgroundColor: const Color(0xffd9dde3),
+      backgroundColor: AppColors.orbitBackground,
       appBar: AppBar(
-        backgroundColor: const Color(0xff505B63),
+        backgroundColor: AppColors.orbitRed,
         centerTitle: true,
-        iconTheme:
-            const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           "Exam Result",
           style: TextStyle(color: Colors.white),
@@ -222,6 +229,7 @@ class ExamDetailsPage extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: AppColors.orbitRed,
                 ),
               ),
 
@@ -229,36 +237,33 @@ class ExamDetailsPage extends StatelessWidget {
 
               /// Subject Card
               Container(
-                width:
-                    MediaQuery.of(context).size.width *
-                        0.9,
-                padding:
-                    const EdgeInsets.all(20),
+                width: MediaQuery.of(context).size.width * 0.9,
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color:
-                      const Color(0xffeeeeee),
-                  borderRadius:
-                      BorderRadius.circular(20),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.orbitOrange.withOpacity(0.1),
+                      blurRadius: 6,
+                      spreadRadius: 2,
+                    )
+                  ],
                 ),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment:
-                          MainAxisAlignment
-                              .spaceBetween,
+                          MainAxisAlignment.spaceBetween,
                       children: const [
                         Text("Subject",
                             style: TextStyle(
                                 fontSize: 18,
-                                fontWeight:
-                                    FontWeight
-                                        .bold)),
+                                fontWeight: FontWeight.bold)),
                         Text("Marks",
                             style: TextStyle(
                                 fontSize: 18,
-                                fontWeight:
-                                    FontWeight
-                                        .bold)),
+                                fontWeight: FontWeight.bold)),
                       ],
                     ),
                     const Divider(),
@@ -268,8 +273,7 @@ class ExamDetailsPage extends StatelessWidget {
                         children: [
                           Row(
                             mainAxisAlignment:
-                                MainAxisAlignment
-                                    .spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                             children: [
                               Text(subject["name"]),
                               Text(
@@ -288,16 +292,18 @@ class ExamDetailsPage extends StatelessWidget {
 
               /// Total Card
               Container(
-                width:
-                    MediaQuery.of(context).size.width *
-                        0.75,
-                padding:
-                    const EdgeInsets.all(20),
+                width: MediaQuery.of(context).size.width * 0.75,
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color:
-                      const Color(0xffeeeeee),
-                  borderRadius:
-                      BorderRadius.circular(20),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.orbitOrange.withOpacity(0.1),
+                      blurRadius: 6,
+                      spreadRadius: 2,
+                    )
+                  ],
                 ),
                 child: Column(
                   children: [
@@ -305,8 +311,8 @@ class ExamDetailsPage extends StatelessWidget {
                       "Total: $totalObtained / $totalMarks",
                       style: const TextStyle(
                         fontSize: 22,
-                        fontWeight:
-                            FontWeight.bold,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.orbitRed,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -314,9 +320,8 @@ class ExamDetailsPage extends StatelessWidget {
                       "Percentage: ${percentage.toStringAsFixed(1)}%",
                       style: const TextStyle(
                         fontSize: 20,
-                        color: Colors.green,
-                        fontWeight:
-                            FontWeight.bold,
+                        color: AppColors.orbitGreen,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],

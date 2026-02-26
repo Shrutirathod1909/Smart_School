@@ -11,10 +11,13 @@ class StudentProfileScreen extends StatefulWidget {
 class _StudentProfileScreenState extends State<StudentProfileScreen> {
   int selectedTab = 0;
 
-  // 🎨 Royal Blue Theme Colors
-  final Color primaryBlue = const Color(0xff1E3A8A);
-  final Color lightBlue = const Color(0xffDBEAFE);
-  final Color backgroundColor = const Color(0xffEEF3FB);
+  // 🎨 ORBIT Theme Colors
+  final Color primaryColor = const Color(0xFF1E88E5); // Blue
+  final Color redColor = const Color(0xFFE53935);
+  final Color greenColor = const Color(0xFF43A047);
+  final Color orangeColor = const Color(0xFFFB8C00);
+  final Color purpleColor = const Color(0xFF8E24AA);
+  final Color backgroundColor = const Color(0xFFF3F4F6);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
           'Student Profile',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: primaryBlue,
+        backgroundColor: primaryColor,
         leading: const BackButton(color: Colors.white),
         elevation: 0,
       ),
@@ -47,6 +50,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
 
             // Main Profile Card
             Card(
+              color: Colors.white,
               elevation: 4,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
@@ -197,12 +201,12 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       width: 120,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: lightBlue,
+        color: const Color(0xFFE3F2FD),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
-          Icon(icon, color: primaryBlue, size: 22),
+          Icon(icon, color: primaryColor, size: 22),
           const SizedBox(height: 6),
           child,
           const SizedBox(height: 6),
@@ -210,7 +214,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             title,
             style: TextStyle(
               fontSize: 12,
-              color: primaryBlue,
+              color: primaryColor,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -223,6 +227,15 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   Widget _tabButton(String title, int index) {
     bool isSelected = selectedTab == index;
 
+    Color selectedColor;
+    if (index == 0) {
+      selectedColor = redColor;
+    } else if (index == 1) {
+      selectedColor = greenColor;
+    } else {
+      selectedColor = purpleColor;
+    }
+
     return Expanded(
       child: ElevatedButton(
         onPressed: () {
@@ -232,7 +245,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor:
-              isSelected ? primaryBlue : const Color(0xff93C5FD),
+              isSelected ? selectedColor : const Color(0xFFBDBDBD),
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
