@@ -27,9 +27,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
   late int totalSeconds;
   bool isPaused = false;
 
-  Duration remainingTime = const Duration(minutes: 90);
-  Timer? timer;
-
   late List<Map<String, dynamic>> questions;
   Map<int, int> userAnswers = {};
   Map<int, bool> markForReview = {};
@@ -38,289 +35,251 @@ class _QuestionScreenState extends State<QuestionScreen> {
   int wrongCount = 0;
   int unattemptedCount = 0;
 
-  List<Map<String, dynamic>> allQuestions = [
-    {
-      "question": "What is the chemical symbol for water?",
-      "options": ["H2O", "O2", "CO2", "NaCl"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is 12 × 8?",
-      "options": ["96", "108", "88", "100"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Who was the first President of the United States?",
-      "options": [
-        "George Washington",
-        "Thomas Jefferson",
-        "Abraham Lincoln",
-        "John Adams",
-      ],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which is the largest continent on Earth?",
-      "options": ["Africa", "Asia", "Europe", "North America"],
-      "correctIndex": 1,
-    },
-    {
-      "question": "What is the boiling point of water at sea level?",
-      "options": ["100°C", "90°C", "80°C", "120°C"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is 45 ÷ 5?",
-      "options": ["9", "10", "8", "7"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Who discovered gravity?",
-      "options": [
-        "Isaac Newton",
-        "Albert Einstein",
-        "Galileo Galilei",
-        "Nikola Tesla",
-      ],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which country is known as the Land of the Rising Sun?",
-      "options": ["China", "Japan", "Thailand", "India"],
-      "correctIndex": 1,
-    },
-    {
-      "question": "What is 15% of 200?",
-      "options": ["20", "25", "30", "35"],
-      "correctIndex": 2,
-    },
-    {
-      "question": "Who wrote the epic 'Ramayana'?",
-      "options": ["Valmiki", "Vyasa", "Kalidasa", "Tulsidas"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which planet is known as the Red Planet?",
-      "options": ["Mars", "Jupiter", "Venus", "Saturn"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is 20 × 12?",
-      "options": ["220", "240", "260", "200"],
-      "correctIndex": 1,
-    },
-    {
-      "question": "Who was the first Prime Minister of India?",
-      "options": [
-        "Jawaharlal Nehru",
-        "Mahatma Gandhi",
-        "Indira Gandhi",
-        "Rajendra Prasad",
-      ],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which is the longest river in the world?",
-      "options": ["Amazon", "Nile", "Ganga", "Yangtze"],
-      "correctIndex": 1,
-    },
-    {
-      "question": "What is the freezing point of water?",
-      "options": ["0°C", "32°C", "-1°C", "100°C"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is 9 × 7?",
-      "options": ["63", "72", "56", "60"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Who invented the telephone?",
-      "options": [
-        "Alexander Graham Bell",
-        "Thomas Edison",
-        "Nikola Tesla",
-        "James Watt",
-      ],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which is the largest ocean on Earth?",
-      "options": ["Atlantic", "Pacific", "Indian", "Arctic"],
-      "correctIndex": 1,
-    },
-    {
-      "question": "What is the capital of France?",
-      "options": ["Paris", "London", "Berlin", "Rome"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which gas is essential for human respiration?",
-      "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is 50 ÷ 5?",
-      "options": ["5", "10", "15", "20"],
-      "correctIndex": 1,
-    },
-    {
-      "question": "Who wrote 'Macbeth'?",
-      "options": [
-        "William Shakespeare",
-        "Charles Dickens",
-        "Leo Tolstoy",
-        "Mark Twain",
-      ],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which planet is closest to the Sun?",
-      "options": ["Mercury", "Venus", "Earth", "Mars"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is the capital of India?",
-      "options": ["New Delhi", "Mumbai", "Kolkata", "Chennai"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is the sum of angles in a triangle?",
-      "options": ["180°", "90°", "360°", "270°"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Who was the first man to step on the moon?",
-      "options": [
-        "Neil Armstrong",
-        "Buzz Aldrin",
-        "Yuri Gagarin",
-        "Michael Collins",
-      ],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which is the smallest prime number?",
-      "options": ["0", "1", "2", "3"],
-      "correctIndex": 2,
-    },
-    {
-      "question": "Which is the national bird of India?",
-      "options": ["Peacock", "Sparrow", "Eagle", "Parrot"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is the chemical symbol for Gold?",
-      "options": ["Au", "Ag", "Gd", "Go"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is 11 × 11?",
-      "options": ["111", "121", "131", "112"],
-      "correctIndex": 1,
-    },
-    {
-      "question": "Who discovered penicillin?",
-      "options": [
-        "Alexander Fleming",
-        "Marie Curie",
-        "Louis Pasteur",
-        "Gregor Mendel",
-      ],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which is the largest desert in the world?",
-      "options": ["Sahara", "Gobi", "Arabian", "Kalahari"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which vitamin is produced when skin is exposed to sunlight?",
-      "options": ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"],
-      "correctIndex": 3,
-    },
-    {
-      "question": "What is the chemical formula for table salt?",
-      "options": ["NaCl", "KCl", "Na2SO4", "CaCl2"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "What is the capital of Australia?",
-      "options": ["Sydney", "Melbourne", "Canberra", "Perth"],
-      "correctIndex": 2,
-    },
-    {
-      "question": "What is the sum of first 10 natural numbers?",
-      "options": ["45", "50", "55", "60"],
-      "correctIndex": 2,
-    },
-    {
-      "question": "Who proposed the theory of relativity?",
-      "options": [
-        "Isaac Newton",
-        "Albert Einstein",
-        "Galileo Galilei",
-        "Stephen Hawking",
-      ],
-      "correctIndex": 1,
-    },
-    {
-      "question": "Which planet is the largest in our solar system?",
-      "options": ["Jupiter", "Saturn", "Earth", "Mars"],
-      "correctIndex": 0,
-    },
-    {
-      "question": "Which is not a mammal?",
-      "options": ["Dolphin", "Shark", "Bat", "Elephant"],
-      "correctIndex": 1,
-    },
-    {
-      "question": "Who is known as the Father of Computers?",
-      "options": ["Charles Babbage", "Alan Turing", "Bill Gates", "Steve Jobs"],
-      "correctIndex": 0,
-    },
-  ];
- @override
-void initState() {
-  super.initState();
-
-  // ✅ IMPORTANT – initialize questions list
-  questions = allQuestions.take(widget.totalQuestions).toList();
-
-  totalSeconds = widget.totalQuestions * 60; // 1 min per question
-
-  if (widget.enableTimer) {
-    startTimer();
+  List<Map<String, dynamic>> allQuestions =[
+  {
+    "question": "What is the chemical symbol for water?",
+    "options": ["H2O", "O2", "CO2", "NaCl"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is 12 × 8?",
+    "options": ["96", "108", "88", "100"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Who was the first President of the United States?",
+    "options": ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "John Adams"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which is the largest continent on Earth?",
+    "options": ["Africa", "Asia", "Europe", "North America"],
+    "correctIndex": 1
+  },
+  {
+    "question": "What is the boiling point of water at sea level?",
+    "options": ["100°C", "90°C", "80°C", "120°C"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is 45 ÷ 5?",
+    "options": ["9", "10", "8", "7"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Who discovered gravity?",
+    "options": ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Nikola Tesla"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which country is known as the Land of the Rising Sun?",
+    "options": ["China", "Japan", "Thailand", "India"],
+    "correctIndex": 1
+  },
+  {
+    "question": "What is 15% of 200?",
+    "options": ["20", "25", "30", "35"],
+    "correctIndex": 2
+  },
+  {
+    "question": "Who wrote the epic 'Ramayana'?",
+    "options": ["Valmiki", "Vyasa", "Kalidasa", "Tulsidas"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "options": ["Mars", "Jupiter", "Venus", "Saturn"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is 20 × 12?",
+    "options": ["220", "240", "260", "200"],
+    "correctIndex": 1
+  },
+  {
+    "question": "Who was the first Prime Minister of India?",
+    "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Indira Gandhi", "Rajendra Prasad"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which is the longest river in the world?",
+    "options": ["Amazon", "Nile", "Ganga", "Yangtze"],
+    "correctIndex": 1
+  },
+  {
+    "question": "What is the freezing point of water?",
+    "options": ["0°C", "32°C", "-1°C", "100°C"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is 9 × 7?",
+    "options": ["63", "72", "56", "60"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Who invented the telephone?",
+    "options": ["Alexander Graham Bell", "Thomas Edison", "Nikola Tesla", "James Watt"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which is the largest ocean on Earth?",
+    "options": ["Atlantic", "Pacific", "Indian", "Arctic"],
+    "correctIndex": 1
+  },
+  {
+    "question": "What is the capital of France?",
+    "options": ["Paris", "London", "Berlin", "Rome"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which gas is essential for human respiration?",
+    "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is 50 ÷ 5?",
+    "options": ["5", "10", "15", "20"],
+    "correctIndex": 1
+  },
+  {
+    "question": "Who wrote 'Macbeth'?",
+    "options": ["William Shakespeare", "Charles Dickens", "Leo Tolstoy", "Mark Twain"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which planet is closest to the Sun?",
+    "options": ["Mercury", "Venus", "Earth", "Mars"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is the capital of India?",
+    "options": ["New Delhi", "Mumbai", "Kolkata", "Chennai"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is the sum of angles in a triangle?",
+    "options": ["180°", "90°", "360°", "270°"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Who was the first man to step on the moon?",
+    "options": ["Neil Armstrong", "Buzz Aldrin", "Yuri Gagarin", "Michael Collins"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which is the smallest prime number?",
+    "options": ["0", "1", "2", "3"],
+    "correctIndex": 2
+  },
+  {
+    "question": "Which is the national bird of India?",
+    "options": ["Peacock", "Sparrow", "Eagle", "Parrot"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is the chemical symbol for Gold?",
+    "options": ["Au", "Ag", "Gd", "Go"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is 11 × 11?",
+    "options": ["111", "121", "131", "112"],
+    "correctIndex": 1
+  },
+  {
+    "question": "Who discovered penicillin?",
+    "options": ["Alexander Fleming", "Marie Curie", "Louis Pasteur", "Gregor Mendel"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which is the largest desert in the world?",
+    "options": ["Sahara", "Gobi", "Arabian", "Kalahari"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which vitamin is produced when skin is exposed to sunlight?",
+    "options": ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"],
+    "correctIndex": 3
+  },
+  {
+    "question": "What is the chemical formula for table salt?",
+    "options": ["NaCl", "KCl", "Na2SO4", "CaCl2"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is the capital of Australia?",
+    "options": ["Sydney", "Melbourne", "Canberra", "Perth"],
+    "correctIndex": 2
+  },
+  {
+    "question": "What is the sum of first 10 natural numbers?",
+    "options": ["45", "50", "55", "60"],
+    "correctIndex": 2
+  },
+  {
+    "question": "Who proposed the theory of relativity?",
+    "options": ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"],
+    "correctIndex": 1
+  },
+  {
+    "question": "Which planet is the largest in our solar system?",
+    "options": ["Jupiter", "Saturn", "Earth", "Mars"],
+    "correctIndex": 0
+  },
+  {
+    "question": "Which is not a mammal?",
+    "options": ["Dolphin", "Shark", "Bat", "Elephant"],
+    "correctIndex": 1
+  },
+  {
+    "question": "Who is known as the Father of Computers?",
+    "options": ["Charles Babbage", "Alan Turing", "Bill Gates", "Steve Jobs"],
+    "correctIndex": 0
   }
-}
+];
+ @override
+  void initState() {
+    super.initState();
 
-  void startTimer() {
+    // Initialize questions list
+    questions = allQuestions.take(widget.totalQuestions).toList();
+    totalSeconds = widget.totalQuestions * 60; // 1 min per question
+
+    if (widget.enableTimer) {
+      startTimer();
+    }
+  }
+
+ void startTimer() {
   _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-    if (!isPaused) {
+    if (!isPaused) { // only count down when not paused
       if (totalSeconds > 0) {
         setState(() {
           totalSeconds--;
         });
       } else {
-        submitExam(); // auto submit
+        submitExam(); // auto submit when timer ends
       }
     }
   });
 }
+
 void togglePause() {
   setState(() {
-    isPaused = !isPaused;
+    isPaused = !isPaused; // switch between pause and play
   });
 }
+
 String get timerText {
   int minutes = totalSeconds ~/ 60;
   int seconds = totalSeconds % 60;
   return "$minutes:${seconds.toString().padLeft(2, '0')}";
 }
+
+
   void selectOption(int index) {
     if (isSubmitted) return;
 
-    // If filter is enabled and user already selected, don't allow change
     if (widget.enableFilter && userAnswers.containsKey(currentIndex)) return;
 
     setState(() {
@@ -329,13 +288,14 @@ String get timerText {
     });
   }
 
-  void clearSelection() {
-    if (isSubmitted) return;
-    setState(() {
-      selectedOption = -1;
-      userAnswers.remove(currentIndex);
-    });
-  }
+ void clearSelection() {
+  if (isSubmitted) return;
+  if (widget.enableFilter && userAnswers.containsKey(currentIndex)) return; // block clearing
+  setState(() {
+    selectedOption = -1;
+    userAnswers.remove(currentIndex);
+  });
+}
 
   void toggleMarkForReview() {
     setState(() {
@@ -363,26 +323,25 @@ String get timerText {
     double accuracy = correctCount + wrongCount == 0
         ? 0
         : (correctCount / (correctCount + wrongCount)) * 100;
-    int totalSeconds = 90 * 60;
-    int timeTakenInSeconds = totalSeconds - remainingTime.inSeconds;
 
-    // Navigate to ResultScreen
+    int totalSeconds = 90 * 60;
+    int timeTakenInSeconds = totalSeconds - (totalSeconds - totalSeconds);
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => TestResultScreen(
           totalQuestions: questions.length,
-          correct: correctCount, // ✅ must match constructor
+          correct: correctCount,
           wrong: wrongCount,
           unattempted: unattemptedCount,
           accuracy: accuracy,
           timeTaken: timeTakenInSeconds,
-          questions: questions, // ✅ ADD THIS
+          questions: questions,
           userAnswers: userAnswers,
         ),
       ),
     ).then((_) {
-      // After ResultScreen closes, notify MockTestScreen to update status
       Navigator.pop(context, true);
     });
   }
@@ -413,28 +372,24 @@ String get timerText {
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      if (widget.enableTimer)
-        Text(
-          timerText,
-          style: const TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-    ],
-  ),
-  actions: [
-    if (widget.enableTimer)
-      IconButton(
-        icon: Icon(
-          isPaused ? Icons.play_arrow : Icons.pause,
-          color: Colors.black,
-        ),
-        onPressed: togglePause,
-      ),
-
+          children: [
+            if (widget.enableTimer)
+              Text(
+                timerText,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(width: 5),
+            GestureDetector(
+              onTap: togglePause, // tap to pause/resume
+              child: Icon(
+                isPaused ? Icons.play_arrow : Icons.pause, // pause/play icon
+                color: Colors.black,
+                size: 20,
+              ),),
             if (!isSubmitted)
               ElevatedButton(
                 onPressed: submitExam,
@@ -443,12 +398,13 @@ String get timerText {
               ),
           ],
         ),
-      
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Score summary after submit
+            // Score summary
             if (isSubmitted)
               Container(
                 padding: const EdgeInsets.all(12),
@@ -544,11 +500,9 @@ String get timerText {
             ),
 
             // Bottom buttons
-            // Bottom buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Previous arrow only
                 ElevatedButton(
                   onPressed: currentIndex > 0
                       ? () {
@@ -564,22 +518,16 @@ String get timerText {
                   ),
                   child: const Icon(Icons.arrow_back),
                 ),
-
-                // Clear button with text
                 ElevatedButton.icon(
                   icon: const Icon(Icons.clear),
                   label: const Text("Clear"),
                   onPressed: clearSelection,
                 ),
-
-                // Mark button with text
                 ElevatedButton.icon(
                   icon: const Icon(Icons.flag),
                   label: const Text("Mark"),
                   onPressed: toggleMarkForReview,
                 ),
-
-                // Next arrow only
                 ElevatedButton(
                   onPressed: currentIndex < questions.length - 1
                       ? () {
@@ -614,7 +562,7 @@ String get timerText {
             ),
           ),
 
-          // Toggle Grid/List inside drawer
+          // Grid/List toggle inside drawer
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
@@ -656,10 +604,10 @@ String get timerText {
                     padding: const EdgeInsets.all(8),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 5,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 5,
-                        ),
+                      crossAxisCount: 5,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
+                    ),
                     itemCount: questions.length,
                     itemBuilder: (context, index) {
                       Color color = Colors.grey;
@@ -667,9 +615,8 @@ String get timerText {
                         int selected = userAnswers[index]!;
                         int correct = questions[index]["correctIndex"];
                         if (widget.enableFilter) {
-                          color = selected == correct
-                              ? Colors.green
-                              : Colors.red;
+                          color =
+                              selected == correct ? Colors.green : Colors.red;
                         } else {
                           color = Colors.blue;
                         }
@@ -703,9 +650,8 @@ String get timerText {
                         int selected = userAnswers[index]!;
                         int correct = questions[index]["correctIndex"];
                         if (widget.enableFilter) {
-                          color = selected == correct
-                              ? Colors.green
-                              : Colors.red;
+                          color =
+                              selected == correct ? Colors.green : Colors.red;
                         } else {
                           color = Colors.blue;
                         }

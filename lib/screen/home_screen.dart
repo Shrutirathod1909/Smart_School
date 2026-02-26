@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Image.asset(
-          "assets/icons/orbit_logo.jpeg",
+          "assets/icons/orbit_logo.png",
           height: 38,
         ),
         const SizedBox(width: 8),

@@ -12,7 +12,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
-
   late AnimationController _waveController;
   late AnimationController _glowController;
   late AnimationController _particleController;
@@ -21,24 +20,25 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    _waveController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 4))
-          ..repeat();
+    _waveController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    )..repeat();
 
-    _glowController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2))
-          ..repeat(reverse: true);
+    _glowController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
 
-    _particleController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 12))
-          ..repeat();
+    _particleController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 12),
+    )..repeat();
 
     Timer(const Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => const SmartSchoolLogin(),
-        ),
+        MaterialPageRoute(builder: (context) => const SmartSchoolLogin()),
       );
     });
   }
@@ -56,7 +56,6 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Stack(
         children: [
-
           /// 🌤 Soft School Blue Gradient
           Container(
             decoration: const BoxDecoration(
@@ -91,10 +90,7 @@ class _SplashScreenState extends State<SplashScreen>
               builder: (_, __) {
                 return ClipPath(
                   clipper: AnimatedWaveClipper(_waveController.value),
-                  child: Container(
-                    height: 220,
-                    color: const Color(0xFF3C8DD9),
-                  ),
+                  child: Container(height: 220, color: const Color(0xFF3C8DD9)),
                 );
               },
             ),
@@ -105,7 +101,6 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 AnimatedBuilder(
                   animation: _glowController,
                   builder: (_, __) {
@@ -120,26 +115,16 @@ class _SplashScreenState extends State<SplashScreen>
                             color: const Color(0xFFB3E5FF).withOpacity(0.6),
                             blurRadius: glow,
                             spreadRadius: 1,
-                          )
+                          ),
                         ],
                       ),
                       child: Image.asset(
-                        "assets/icons/orbit_logo.jpeg",
+                        "assets/icons/orbit_logo.png",
                         width: 95,
                         height: 95,
                       ),
                     );
                   },
-                ),
-
-                const SizedBox(height: 30),
-
-                const Text(
-                  "Learn. Grow. Succeed.",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white70,
-                  ),
                 ),
               ],
             ),
@@ -195,8 +180,7 @@ class ParticlePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withOpacity(0.15);
+    final paint = Paint()..color = Colors.white.withOpacity(0.15);
 
     final random = Random(1);
 
@@ -204,7 +188,7 @@ class ParticlePainter extends CustomPainter {
       double x = random.nextDouble() * size.width;
       double y =
           (random.nextDouble() * size.height + progress * size.height) %
-              size.height;
+          size.height;
 
       canvas.drawCircle(Offset(x, y), 2, paint);
     }

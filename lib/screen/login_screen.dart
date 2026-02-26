@@ -28,7 +28,7 @@ class _SmartSchoolLoginState extends State<SmartSchoolLogin> {
 
                 /// LOGO
                 Image.asset(
-                  "assets/icons/orbit_logo.jpeg",
+                  "assets/icons/orbit_logo.png",
                   height: 60,
                 ),
 

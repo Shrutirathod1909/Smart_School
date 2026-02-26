@@ -50,7 +50,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icons/orbit_logo.jpeg"
+  image_path: "assets/icons/orbit_logo.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -70,7 +70,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-  - assets/icons/orbit_logo.jpeg
+  - assets/icons/orbit_logo.png
   - assets/icons/1.png
   - assets/icons/homework.webp
   - assets/icons/daily.webp
