@@ -1,8 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'event_data.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -19,13 +20,11 @@ void main() async {
 
   await flutterLocalNotificationsPlugin.initialize(settings);
 
-  // Request notification permission for Android 13+
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.requestNotificationsPermission();
 
-  // Create Notification Channel
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'notice_channel',
     'School Notifications',
@@ -52,6 +51,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// ✅ MODEL
+class SchoolEvent {
+  final String title;
+  final DateTime date;
+
+  SchoolEvent({required this.title, required this.date});
+
+  factory SchoolEvent.fromJson(Map<String, dynamic> json) {
+    return SchoolEvent(
+      title: json['event_title'],
+      date: DateTime.parse(json['event_date']),
+    );
+  }
+}
+
 class NoticeBoardScreen extends StatefulWidget {
   const NoticeBoardScreen({super.key});
 
@@ -60,62 +74,81 @@ class NoticeBoardScreen extends StatefulWidget {
 }
 
 class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
+
+  List<SchoolEvent> events = [];
+
   @override
   void initState() {
     super.initState();
-    scheduleAllEvents();
+    loadAndScheduleEvents();
   }
 
-  /// 🔔 Schedule All School Events Notifications
+  /// ✅ FETCH FROM API
+  Future<void> loadAndScheduleEvents() async {
+    final response = await http.get(
+      Uri.parse("http://10.0.2.2/event.php"), // 🔥 change if needed
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      List temp = data['data'];
+
+      events = temp.map((e) => SchoolEvent.fromJson(e)).toList();
+
+      await scheduleAllEvents();
+    } else {
+      print("API ERROR");
+    }
+  }
+
+  /// 🔔 SCHEDULE NOTIFICATIONS
   Future<void> scheduleAllEvents() async {
     DateTime now = DateTime.now();
-    int id = 1; // unique ID for each notification
+    int id = 1;
 
-    for (var entry in schoolEvents.entries) {
-      for (var event in entry.value) {
-        // Schedule for 9 AM on the event day
-        DateTime eventDate = DateTime(
-          now.year,
+    for (var event in events) {
+
+      DateTime eventDate = DateTime(
+        now.year,
+        event.date.month,
+        event.date.day,
+        9,
+        0,
+      );
+
+      if (eventDate.isBefore(now)) {
+        eventDate = DateTime(
+          now.year + 1,
           event.date.month,
           event.date.day,
           9,
           0,
         );
-
-        // If the date already passed, schedule for next year
-        if (eventDate.isBefore(now)) {
-          eventDate = DateTime(
-            now.year + 1,
-            event.date.month,
-            event.date.day,
-            9,
-            0,
-          );
-        }
-
-        // Schedule notification
-        await flutterLocalNotificationsPlugin.zonedSchedule(
-          id,
-          event.title, // Event title
-          "Reminder for this notice", // Notification body
-          tz.TZDateTime.from(eventDate, tz.local),
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'notice_channel',
-              'Notice Reminder',
-              importance: Importance.max,
-              priority: Priority.high,
-              playSound: true,
-            ),
-          ),
-          uiLocalNotificationDateInterpretation:
-              UILocalNotificationDateInterpretation.absoluteTime,
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        );
-
-        id++; // increment ID for next notification
       }
+
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id,
+        event.title,
+        "Reminder for this event",
+        tz.TZDateTime.from(eventDate, tz.local),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'notice_channel',
+            'School Notifications',
+            importance: Importance.max,
+            priority: Priority.high,
+          ),
+        ),
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+
+      id++;
     }
+
+    print("✅ Notifications Scheduled");
   }
 
   @override
@@ -127,7 +160,7 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
       ),
       body: const Center(
         child: Text(
-          "All Events Notifications Scheduled ✅",
+          "Notifications Scheduled from API ✅",
           style: TextStyle(fontSize: 18),
         ),
       ),

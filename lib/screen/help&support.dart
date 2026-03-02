@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart'; // For email/phone links
+import 'package:url_launcher/url_launcher.dart';
 
 class HelpSupportPage extends StatelessWidget {
   const HelpSupportPage({super.key});
 
-  // Example function to open email
+  // Email launcher
   void _launchEmail() async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: 'support@example.com',
-      query: 'subject=Help%20Request',
+      query: 'subject=Help Request',
     );
+
     if (await canLaunchUrl(emailUri)) {
       await launchUrl(emailUri);
     } else {
@@ -18,9 +19,13 @@ class HelpSupportPage extends StatelessWidget {
     }
   }
 
-  // Example function to call a phone number
+  // Phone launcher
   void _launchPhone() async {
-    final Uri phoneUri = Uri(scheme: 'tel', path: '+1234567890');
+    final Uri phoneUri = Uri(
+      scheme: 'tel',
+      path: '+1234567890',
+    );
+
     if (await canLaunchUrl(phoneUri)) {
       await launchUrl(phoneUri);
     } else {
@@ -30,24 +35,30 @@ class HelpSupportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🎨 Color Palette
-    const Color primaryDark = Color(0xFF353535);
     const Color primaryBlue = Color(0xFF1976D2);
-    const Color cardGrey = Color(0xFFF5F5F5);
     const Color textBlack87 = Colors.black87;
     const Color textBlack54 = Colors.black54;
     const Color white = Colors.white;
 
     return Scaffold(
-      backgroundColor: cardGrey,
+      backgroundColor: Colors.white, // ✅ White background
+
       appBar: AppBar(
+        backgroundColor: primaryBlue, // ✅ Blue AppBar
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: const Text(
           'Help & Support',
-          style: TextStyle(color: white),
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: primaryDark,
-        elevation: 0,
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -67,7 +78,7 @@ class HelpSupportPage extends StatelessWidget {
               'We are here to help! Please check the FAQ below or contact us directly via email or phone.',
               style: TextStyle(fontSize: 16, color: textBlack54),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
             // Contact Section
             const Text(
@@ -79,9 +90,10 @@ class HelpSupportPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+
             Card(
               color: white,
-              elevation: 2,
+              elevation: 3,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -101,7 +113,8 @@ class HelpSupportPage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+
+            const SizedBox(height: 25),
 
             // FAQ Section
             const Text(
@@ -113,82 +126,67 @@ class HelpSupportPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Card(
-              color: white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 2,
-              child: ExpansionTile(
-                iconColor: primaryBlue,
-                collapsedIconColor: primaryBlue,
-                title: const Text(
-                  'How do I reset my password?',
-                  style: TextStyle(color: textBlack87),
-                ),
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Text(
-                      'Go to the login page, click on "Forgot Password", and follow the instructions.',
-                      style: TextStyle(color: textBlack54),
-                    ),
-                  ),
-                ],
-              ),
+
+            // FAQ 1
+            _buildFaqCard(
+              question: 'How do I reset my password?',
+              answer:
+                  'Go to the login page, click on "Forgot Password", and follow the instructions.',
             ),
+
             const SizedBox(height: 10),
-            Card(
-              color: white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 2,
-              child: ExpansionTile(
-                iconColor: primaryBlue,
-                collapsedIconColor: primaryBlue,
-                title: const Text(
-                  'How can I contact support?',
-                  style: TextStyle(color: textBlack87),
-                ),
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Text(
-                      'You can contact us via email or phone using the contact section above.',
-                      style: TextStyle(color: textBlack54),
-                    ),
-                  ),
-                ],
-              ),
+
+            // FAQ 2
+            _buildFaqCard(
+              question: 'How can I contact support?',
+              answer:
+                  'You can contact us via email or phone using the contact section above.',
             ),
+
             const SizedBox(height: 10),
-            Card(
-              color: white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 2,
-              child: ExpansionTile(
-                iconColor: primaryBlue,
-                collapsedIconColor: primaryBlue,
-                title: const Text(
-                  'Where can I find the user manual?',
-                  style: TextStyle(color: textBlack87),
-                ),
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Text(
-                      'The user manual can be found in the "Resources" section of the app.',
-                      style: TextStyle(color: textBlack54),
-                    ),
-                  ),
-                ],
-              ),
+
+            // FAQ 3
+            _buildFaqCard(
+              question: 'Where can I find the user manual?',
+              answer:
+                  'The user manual can be found in the "Resources" section of the app.',
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Reusable FAQ Card Widget
+  Widget _buildFaqCard({
+    required String question,
+    required String answer,
+  }) {
+    const Color primaryBlue = Color(0xFF1976D2);
+    const Color textBlack87 = Colors.black87;
+    const Color textBlack54 = Colors.black54;
+
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ExpansionTile(
+        iconColor: primaryBlue,
+        collapsedIconColor: primaryBlue,
+        title: Text(
+          question,
+          style: const TextStyle(color: textBlack87),
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              answer,
+              style: const TextStyle(color: textBlack54),
+            ),
+          ),
+        ],
       ),
     );
   }

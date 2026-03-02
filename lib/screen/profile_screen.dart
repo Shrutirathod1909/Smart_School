@@ -1,277 +1,320 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:market/screen/home_screen.dart';
 
 class StudentProfileScreen extends StatefulWidget {
-  const StudentProfileScreen({super.key});
+  final String name;
+  final String? studentClass;
+  final String userId;
+  final String role;
+
+  const StudentProfileScreen({
+    super.key,
+    required this.name,
+    this.studentClass,
+    required this.userId,
+    required this.role,
+  });
 
   @override
   State<StudentProfileScreen> createState() => _StudentProfileScreenState();
 }
 
 class _StudentProfileScreenState extends State<StudentProfileScreen> {
+  bool isLoading = true;
   int selectedTab = 0;
 
-  // 🎨 ORBIT Theme Colors
-  final Color primaryColor = const Color(0xFF1E88E5); // Blue
-  final Color redColor = const Color(0xFFE53935);
-  final Color greenColor = const Color(0xFF43A047);
-  final Color orangeColor = const Color(0xFFFB8C00);
-  final Color purpleColor = const Color(0xFF8E24AA);
-  final Color backgroundColor = const Color(0xFFF3F4F6);
+  // 🔹 PROFILE VARIABLES
+  String email = "";
+  String phone = "";
+  String gender = "";
+  String dob = "";
+  String bloodGroup = "";
+  String religion = "";
+  String category = "";
+  String fatherName = "";
+  String motherName = "";
+  String fatherPhone = "";
+  String motherPhone = "";
+  String address = "";
+  String city = "";
+  String pincode = "";
+  String state = "";
+  String country = "";
+  String admissionNo = "";
+  String rollNo = "";
+  String status = "";
+  String classId = "";
+  String sectionId = "";
+  String medium = "";
+  String feeType = "";
+  String photo = "";
+
+  // ✅ NEW
+  String standard = "";
+  String sectionName = "";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfile();
+  }
+
+  Future<void> fetchProfile() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            "http://192.168.1.39/orbit/profile.php?user_id=${widget.userId}"),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (data['status'] == 'success') {
+        final user = data['data'];
+
+        setState(() {
+          email = user['email'] ?? "";
+          phone = user['phone'] ?? "";
+          gender = user['gender'] ?? "";
+          dob = user['dob'] ?? ""; // ✅ FIXED
+          bloodGroup = user['blood_group'] ?? "";
+          religion = user['religion'] ?? "";
+          category = user['category'] ?? "";
+          fatherName = user['father_name'] ?? "";
+          motherName = user['mother_name'] ?? "";
+          fatherPhone = user['father_phone'] ?? "";
+          motherPhone = user['mother_phone'] ?? "";
+          address = user['address'] ?? "";
+          city = user['city'] ?? "";
+          pincode = user['pincode'] ?? "";
+          state = user['state'] ?? "";
+          country = user['country'] ?? "";
+          admissionNo = user['admission_no'] ?? "";
+          rollNo = user['roll_no'] ?? "";
+          status = user['status'] ?? "";
+          classId = user['class_id']?.toString() ?? "";
+          sectionId = user['section_id']?.toString() ?? "";
+          medium = user['medium']?.toString() ?? "";
+          feeType = user['fee_type']?.toString() ?? "";
+          photo = user['profile_image'] ?? "";
+
+          // ✅ STANDARD + SECTION
+          standard = user['standard'] ?? "";
+          sectionName = user['section_name'] ?? "";
+
+          isLoading = false;
+        });
+      } else {
+        setState(() => isLoading = false);
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: const Color(0xFFF2F6FF),
       appBar: AppBar(
+        backgroundColor: const Color(0xFF1E88E5),
         title: const Text(
-          'Student Profile',
+          "Student Profile",
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: primaryColor,
-        leading: const BackButton(color: Colors.white),
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Student Profile',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'View and manage your academic profile',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            const SizedBox(height: 16),
-
-            // Main Profile Card
-            Card(
-              color: Colors.white,
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-
-                    /// 👤 Name & Avatar
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Edward Thomas',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text('Class 1 (A) (2025-26)'),
-                              Text('Adm. No. 18001'),
-                              Text('Roll Number 100035'),
-                            ],
-                          ),
-                        ),
-                        const CircleAvatar(
-                          radius: 40,
-                          backgroundImage:
-                              AssetImage('assets/icons/student.webp'),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    /// 📦 Small Info Boxes
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          _smallInfoBox(
-                            title: 'Barcode',
-                            icon: Icons.qr_code,
-                            child: BarcodeWidget(
-                              barcode: Barcode.code128(),
-                              data: '18001',
-                              width: 80,
-                              height: 30,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          _smallInfoBox(
-                            title: 'QR Code',
-                            icon: Icons.qr_code_2,
-                            child: BarcodeWidget(
-                              barcode: Barcode.qrCode(),
-                              data: '18001',
-                              width: 60,
-                              height: 60,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          _smallInfoBox(
-                            title: 'Behaviour Score',
-                            icon: Icons.star,
-                            child: const Text(
-                              '60',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    /// 🔘 Tabs
-                    Row(
-                      children: [
-                        _tabButton("PERSONAL", 0),
-                        const SizedBox(width: 8),
-                        _tabButton("PARENTS", 1),
-                        const SizedBox(width: 8),
-                        _tabButton("OTHER", 2),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    /// 📋 Details Section
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _detailsColumn([
-                            'Admission Date:',
-                            'Date Of Birth:',
-                            'Gender:',
-                            'Category:',
-                          ]),
-                          _detailsColumn([
-                            '04/04/2025',
-                            '24/10/2013',
-                            'Male',
-                            'General',
-                          ]),
-                          _detailsColumn([
-                            'Religion:',
-                            'Email:',
-                            'Blood Group:',
-                            'Height:',
-                          ]),
-                          _detailsColumn([
-                            'N/A',
-                            'nathan455@gmail.com',
-                            'A+',
-                            '60 cm',
-                          ]),
-                        ],
-                      ),
-                    ),
-                  ],
+        iconTheme: const IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => HomeScreen(
+                  name: widget.name,
+                  studentClass: standard,
+                  userId: widget.userId,
+                  classId: classId,
+                  sectionId: sectionId,
+                  role: widget.role,
+                    profile_image: photo,
+                    sectionName: sectionName,
+                    standard: standard,
                 ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
-    );
-  }
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Student Profile",
+                    style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    "View and manage your academic profile",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(height: 20),
 
-  /// 🔹 Small Info Box
-  Widget _smallInfoBox({
-    required String title,
-    required IconData icon,
-    required Widget child,
-  }) {
-    return Container(
-      width: 120,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE3F2FD),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: primaryColor, size: 22),
-          const SizedBox(height: 6),
-          child,
-          const SizedBox(height: 6),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              color: primaryColor,
-              fontWeight: FontWeight.w600,
+                  Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE3F2FD),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade300,
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+
+                        /// 🔹 NAME + STANDARD
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  Text(widget.name,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  const SizedBox(height: 6),
+
+                                  // ✅ SHOW STANDARD PROPER
+                                  Text(
+                                      '$standard - $sectionName'),
+
+                                  Text("Adm. No. $admissionNo"),
+                                  Text("Roll Number $rollNo"),
+                                ],
+                              ),
+                            ),
+                            CircleAvatar(
+                              radius: 45,
+                              backgroundImage: photo.isNotEmpty
+                                  ? NetworkImage(
+                                      "http://10.247.221.237/orbit/$photo")
+                                  : const AssetImage(
+                                          'assets/icons/student.webp')
+                                      as ImageProvider,
+                            )
+                          ],
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        /// 🔹 TABS
+                        Row(
+                          children: [
+                            tabButton("PERSONAL", 0),
+                            tabButton("PARENTS", 1),
+                            tabButton("OTHER", 2),
+                          ],
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        /// 🔹 TAB DATA
+                        if (selectedTab == 0) ...[
+                          buildRow("Date Of Birth", dob),
+                          buildRow("Gender", gender),
+                          buildRow("Category", category),
+                          buildRow("Religion", religion),
+                          buildRow("Blood Group", bloodGroup),
+                        ],
+
+                        if (selectedTab == 1) ...[
+                          buildRow("Father Name", fatherName),
+                          buildRow("Father Phone", fatherPhone),
+                          buildRow("Mother Name", motherName),
+                          buildRow("Mother Phone", motherPhone),
+                          buildRow("Email", email),
+                          buildRow("Phone", phone),
+                        ],
+
+                        if (selectedTab == 2) ...[
+                          buildRow("Address", address),
+                          buildRow("City", city),
+                          buildRow("State", state),
+                          buildRow("Country", country),
+                          buildRow("Pincode", pincode),
+                          buildRow("Status", status),
+
+                          // ✅ REPLACED
+                          buildRow("Standard", standard),
+                          buildRow("Section", sectionName),
+
+                          buildRow("Medium", medium),
+                          buildRow("Fee Type", feeType),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 
-  /// 🔹 Tab Button
-  Widget _tabButton(String title, int index) {
+  Widget tabButton(String text, int index) {
     bool isSelected = selectedTab == index;
 
-    Color selectedColor;
-    if (index == 0) {
-      selectedColor = redColor;
-    } else if (index == 1) {
-      selectedColor = greenColor;
-    } else {
-      selectedColor = purpleColor;
-    }
-
     return Expanded(
-      child: ElevatedButton(
-        onPressed: () {
+      child: GestureDetector(
+        onTap: () {
           setState(() {
             selectedTab = index;
           });
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor:
-              isSelected ? selectedColor : const Color(0xFFBDBDBD),
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? const Color(0xFF1E88E5)
+                : Colors.grey.shade400,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold),
           ),
         ),
-        child: Text(title),
       ),
     );
   }
 
-  /// 🔹 Details Column
-  Widget _detailsColumn(List<String> items) {
+  Widget buildRow(String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: items
-            .map((e) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Text(
-                    e,
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ))
-            .toList(),
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 4,
+              child: Text(title,
+                  style:
+                      const TextStyle(fontWeight: FontWeight.w600))),
+          Expanded(flex: 6, child: Text(value.isEmpty ? "-" : value)),
+        ],
       ),
     );
   }

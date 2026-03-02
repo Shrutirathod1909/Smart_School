@@ -603,12 +603,27 @@ class _QuestionScreenState extends State<QuestionScreen> {
               style: TextStyle(fontSize: isTablet ? 18 : 14),
             ),
             const SizedBox(height: 10),
-            Text(
-              question["question"],
-              style: TextStyle(
-                  fontSize: isTablet ? 20 : 16,
-                  fontWeight: FontWeight.w500),
-            ),
+          Row(
+  children: [
+    Expanded(
+      child: Text(
+        question["question"],
+        style: TextStyle(
+          fontSize: isTablet ? 20 : 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    ),
+    if (markForReview[currentIndex] == true)
+      const Padding(
+        padding: EdgeInsets.only(left: 8.0),
+        child: Icon(
+          Icons.bookmark,
+          color: Colors.orange,
+        ),
+      ),
+  ],
+),
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:market/screen/help&support.dart';
+import 'package:market/screen/home_screen.dart';
 
 /// 🎨 ORBIT COLORS
 class AppColors {
@@ -10,7 +11,28 @@ class AppColors {
 }
 
 class AppSettingsScreen extends StatefulWidget {
-  const AppSettingsScreen({super.key});
+  final String name;
+  final String? studentClass;
+  final String userId;
+  final String classId; // ✅ add this
+  final String sectionId;
+  final String role; // ✅ add this
+  final String profileImage;
+  final String sectionName;
+  final String standard;
+
+  const AppSettingsScreen({
+    super.key,
+    required this.name,
+    this.studentClass,
+    required this.userId,
+    required this.classId,
+    required this.sectionId,
+    required this.role,
+    required this.profileImage,
+    required this.sectionName,
+    required this.standard,
+  });
 
   @override
   State<AppSettingsScreen> createState() => _AppSettingsScreenState();
@@ -29,12 +51,13 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
   }) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       margin: const EdgeInsets.only(bottom: 15),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 12,
+        ),
         leading: CircleAvatar(
           radius: 24,
           backgroundColor: iconColor.withOpacity(0.2),
@@ -44,11 +67,10 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
           title,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
         ),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(color: Colors.grey.shade600),
-        ),
-        trailing: trailingWidget ?? const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+        subtitle: Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
+        trailing:
+            trailingWidget ??
+            const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
         onTap: onTap,
       ),
     );
@@ -64,7 +86,28 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => HomeScreen(
+                  name: widget.name,
+                  studentClass: widget.studentClass ?? "",
+                  userId: widget.userId,
+                  classId: widget.classId,
+                  sectionId: widget.sectionId,
+                  role: widget.role,
+                  profile_image: widget.profileImage,
+                 sectionName: widget.sectionName, // ✅ fixed
+          standard: widget.standard, 
+                ),
+              ),
+            );
+          },
+        ),
+
         backgroundColor: AppColors.orbitDarkBlue,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -72,7 +115,6 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-
             /// Notifications Toggle
             buildSettingTile(
               icon: Icons.notifications,
@@ -99,14 +141,11 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const HelpSupportPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const HelpSupportPage()),
                 );
               },
             ),
-
-                   ],
+          ],
         ),
       ),
     );

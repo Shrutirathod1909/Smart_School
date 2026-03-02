@@ -1,10 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:market/screen/books.dart';
 import 'package:market/screen/fees.dart';
+import 'package:market/screen/home_screen.dart';
 import 'package:market/screen/transport_screen.dart';
 
 class AboutSchoolPage extends StatelessWidget {
-  const AboutSchoolPage({super.key});
+  final String name;
+  final String? studentClass;
+  final String userId;
+  final String classId;      // ✅ add this
+  final String sectionId;  
+  final String role;  // ✅ add this
+  final String profileImage;
+  final String standard;
+  final String section;
+  
+
+  const AboutSchoolPage({
+    super.key,
+    required this.name,
+    this.studentClass,
+    required this.userId,
+    required this.classId,
+    required this.sectionId,
+    required this.role,
+    required this.profileImage,
+    required this.section,
+    required this.standard
+  });
 
   static const Color backgroundColor = Color(0xFFF2F4F7);
   static const Color appBarColor = Color(0xFF505B63);
@@ -17,10 +40,34 @@ class AboutSchoolPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: appBarColor,
-        title: const Text("About School",style: TextStyle(color: Colors.white),),
-        centerTitle: true,
+  title: const Text(
+    "About School",
+    style: TextStyle(color: Color.fromARGB(255, 19, 18, 18), fontWeight: FontWeight.w600),
+  ),
+  centerTitle: true,
+  leading: IconButton(
+  icon: const Icon(Icons.arrow_back, color: Colors.black),
+  onPressed: () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(
+          name: name,
+          studentClass:studentClass ?? "",
+           userId:userId,
+            classId: classId,
+      sectionId: sectionId,
+      role: role,
+     profile_image: profileImage,
+      standard: standard,   // ✅ pass it
+  sectionName: section, 
+  
+        ),
       ),
+    );
+  },
+),
+),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

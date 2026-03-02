@@ -1,268 +1,183 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class HomeworkScreen extends StatefulWidget {
-  const HomeworkScreen({super.key});
+  final String classId;
+  final String sectionId;
+
+  const HomeworkScreen({
+    super.key,
+    required this.classId,
+    required this.sectionId,
+  });
 
   @override
   State<HomeworkScreen> createState() => _HomeworkScreenState();
 }
 
 class _HomeworkScreenState extends State<HomeworkScreen> {
-  String selectedStatus = "Submitted";
-  String selectedFilter = "All";
+  bool isLoading = true;
+  List homeworkList = [];
 
-  // Colors inspired by the Orbit Science logo
-  final Color orbitRed = const Color(0xFFD32F2F);
-  final Color orbitBlue = const Color(0xFF1976D2);
-  final Color orbitGreen = const Color(0xFF388E3C);
-  final Color orbitOrange = const Color(0xFFFB8C00);
-  final Color orbitPurple = const Color(0xFF7B1FA2);
-  final Color cardBackground = const Color(0xFFF5F5F5);
-  final Color textBlack = Colors.black87;
-
-  List<Map<String, dynamic>> homeworkList = [
-    {
-      "subject": "Mathematics",
-      "code": "110",
-      "homeworkDate": "01/01/2026",
-      "submissionDate": "02/01/2026",
-      "createdBy": "1 (ID: 1)",
-      "maxMarks": "30.00",
-      "file": "1768439585-107880694569683f21d206d!img.png",
-    },
-    {
-      "subject": "Computer",
-      "code": "00220",
-      "homeworkDate": "22/01/2026",
-      "submissionDate": "02/01/2026",
-      "createdBy": "1 (ID: 1)",
-      "maxMarks": "30.00",
-      "file": "1768025866-18638547036961ef0aa25a8!Screen.png",
-    },
-  ];
+  final Color primaryColor = const Color(0xFF6A1B9A);
 
   @override
-  Widget build(BuildContext context) {
-    // Filter homework list by selectedFilter (simple filter by subject)
-    List<Map<String, dynamic>> filteredHomework = homeworkList.where((hw) {
-      return selectedFilter == "All" || hw['subject'] == selectedFilter;
-    }).toList();
+  void initState() {
+    super.initState();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Homework",
-          style: TextStyle(color: Colors.white),
+    print("CLASS ID: ${widget.classId}");
+    print("SECTION ID: ${widget.sectionId}");
+
+    fetchHomework();
+  }
+
+  Future<void> fetchHomework() async {
+    try {
+      final url ="http://192.168.1.39/orbit/homework.php?class_id=${widget.classId}&section_id=${widget.sectionId}";
+
+      print("URL: $url");
+
+      final response = await http.get(Uri.parse(url));
+
+      print("BODY: ${response.body}");
+
+      final data = jsonDecode(response.body);
+
+      if (data['status'] == 'success') {
+        setState(() {
+          homeworkList = data['data'];
+          isLoading = false;
+        });
+      } else {
+        setState(() => isLoading = false);
+      }
+    } catch (e) {
+      print("ERROR: $e");
+      setState(() => isLoading = false);
+    }
+  }
+
+  Widget buildCard(Map hw) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        gradient: LinearGradient(
+          colors: [Colors.white, Colors.purple.shade50],
         ),
-        backgroundColor: orbitPurple,
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {},
-          ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Title
             Text(
-              "Your Homework is here!",
+              hw['title'] ?? '',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: orbitBlue,
+                color: primaryColor,
               ),
             ),
+
+            const SizedBox(height: 10),
+
+            // Dates Row
+            Row(
+              children: [
+                Icon(Icons.calendar_today, size: 16, color: primaryColor),
+                const SizedBox(width: 5),
+                Text("Date: ${hw['homework_date'] ?? ''}"),
+              ],
+            ),
+
             const SizedBox(height: 5),
+
+            Row(
+              children: [
+                Icon(Icons.access_time, size: 16, color: Colors.red),
+                const SizedBox(width: 5),
+                Text("Due: ${hw['due_date'] ?? ''}"),
+              ],
+            ),
+
+            const SizedBox(height: 5),
+
+            Row(
+              children: [
+                Icon(Icons.person, size: 16, color: Colors.green),
+                const SizedBox(width: 5),
+                Text("By: ${hw['created_by'] ?? ''}"),
+              ],
+            ),
+
+            const Divider(height: 20),
+
+            // Description
             Text(
-              "Track your assignments and submissions",
-              style: TextStyle(color: textBlack),
+              hw['description'] ?? '',
+              style: const TextStyle(fontSize: 14),
             ),
-            const SizedBox(height: 15),
 
-            // Status Tabs with horizontal scroll
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  statusButton("Pending", orbitOrange),
-                  const SizedBox(width: 8),
-                  statusButton("Submitted", orbitGreen),
-                  const SizedBox(width: 8),
-                  statusButton("Evaluated", orbitBlue),
-                  const SizedBox(width: 15),
-                  DropdownButton<String>(
-                    value: selectedFilter,
-                    items: <String>['All', 'Mathematics', 'Science', 'Computer']
-                        .map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedFilter = value!;
-                      });
-                    },
+            const SizedBox(height: 10),
+
+            // Download Button
+            if (hw['attachment'] != null && hw['attachment'] != "")
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // TODO: Download logic
+                  },
+                  icon: const Icon(Icons.download),
+                  label: const Text("Download"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
                   ),
-                ],
+                ),
               ),
-            ),
-            const SizedBox(height: 15),
-
-            // Homework Cards
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredHomework.length,
-                itemBuilder: (context, index) {
-                  final hw = filteredHomework[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: cardBackground,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: orbitPurple.withOpacity(0.2),
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                      border: Border.all(color: orbitPurple.withOpacity(0.3)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Header with subject and Resubmit
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "${hw['subject']} (${hw['code']})",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: orbitRed,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: orbitBlue,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Text(
-                                "RESUBMIT",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Homework details
-                        Text("Homework Date: ${hw['homeworkDate']}",
-                            style: TextStyle(color: textBlack)),
-                        Text("Submission Date: ${hw['submissionDate']}",
-                            style: TextStyle(color: textBlack)),
-                        Text("Created By: ${hw['createdBy']}",
-                            style: TextStyle(color: textBlack)),
-                        Text("Max Marks: ${hw['maxMarks']}",
-                            style: TextStyle(color: textBlack)),
-                        const SizedBox(height: 10),
-
-                        // Submission row
-                        const Text(
-                          "My Submission:",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                hw['file'],
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: textBlack),
-                              ),
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.download,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                              label: const Text(
-                                "Download",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: orbitGreen,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                textStyle: const TextStyle(fontSize: 14),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Description: Submit homework before last date.",
-                          style: TextStyle(
-                            color: textBlack,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  Widget statusButton(String status, Color color) {
-    bool isSelected = selectedStatus == status;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade100,
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedStatus = status;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? color : Colors.grey.shade300,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          status,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      appBar: AppBar(
+        title: const Text("Homework"),
+        backgroundColor: primaryColor,
+        elevation: 0,
       ),
+
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : homeworkList.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No Homework Found ❌",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: homeworkList.length,
+                  itemBuilder: (context, index) {
+                    return buildCard(homeworkList[index]);
+                  },
+                ),
     );
   }
 }
